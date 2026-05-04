@@ -3083,33 +3083,37 @@ function initGsapScrollFlow() {
   }
  
   // 3. CREDENTIALS WAVE PARALLAX
-  gsap.to(".wave-background", {
-    y: 100,
-    ease: "none",
-    scrollTrigger: {
-      trigger: ".credentials",
-      start: "top bottom",
-      end: "bottom top",
-      scrub: true,
-      invalidateOnRefresh: true,
-    }
-  });
- 
-  // 4. ABOUT-ME PORTRAIT PARALLAX
-  gsap.fromTo(".about-image-wrapper",
-    { y: -30 },
-    {
-      y: 30,
+  if (!isPhoneLayout) {
+    gsap.to(".wave-background", {
+      y: 100,
       ease: "none",
       scrollTrigger: {
-        trigger: ".about-me",
+        trigger: ".credentials",
         start: "top bottom",
         end: "bottom top",
         scrub: true,
         invalidateOnRefresh: true,
       }
-    }
-  );
+    });
+  }
+ 
+  // 4. ABOUT-ME PORTRAIT PARALLAX
+  if (!isPhoneLayout) {
+    gsap.fromTo(".about-image-wrapper",
+      { y: -30 },
+      {
+        y: 30,
+        ease: "none",
+        scrollTrigger: {
+          trigger: ".about-me",
+          start: "top bottom",
+          end: "bottom top",
+          scrub: true,
+          invalidateOnRefresh: true,
+        }
+      }
+    );
+  }
  
   // Recalc on resize and after load (image dimensions etc)
   window.addEventListener('load', () => ScrollTrigger.refresh());
@@ -4329,7 +4333,7 @@ if (isPhoneLayout) {
       function resize() {
         const r = host.getBoundingClientRect();
         renderer.setSize(r.width, r.height, false);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.setPixelRatio(1); // Force 1x pixel ratio on mobile for massive performance gain
         camera.aspect = r.width / r.height;
         camera.updateProjectionMatrix();
       }
