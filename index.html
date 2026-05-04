@@ -2474,7 +2474,7 @@
   </div>
  
   <!-- Mobile-only card stack -->  <div class="arsenal-mobile-stack" id="arsenalMobileStack">
-    <div class="arsenal-skill-card" data-kind="codeCube" data-accent="#ff3d1f">
+    <div class="arsenal-skill-card" data-skill="web" data-kind="codeCube" data-accent="#ff3d1f" style="cursor: pointer;">
       <div class="skill-canvas"></div>
       <div class="skill-meta">
         <div class="skill-num">01 / SKILL</div>
@@ -2482,7 +2482,7 @@
       </div>
       <div class="skill-arrow"></div>
     </div>
-    <div class="arsenal-skill-card" data-kind="monolith" data-accent="#ff5a2a">
+    <div class="arsenal-skill-card" data-skill="webdesign" data-kind="monolith" data-accent="#ff5a2a" style="cursor: pointer;">
       <div class="skill-canvas"></div>
       <div class="skill-meta">
         <div class="skill-num">02 / SKILL</div>
@@ -2490,7 +2490,7 @@
       </div>
       <div class="skill-arrow"></div>
     </div>
-    <div class="arsenal-skill-card" data-kind="wireSphere" data-accent="#ff7a3a">
+    <div class="arsenal-skill-card" data-skill="seo" data-kind="wireSphere" data-accent="#ff7a3a" style="cursor: pointer;">
       <div class="skill-canvas"></div>
       <div class="skill-meta">
         <div class="skill-num">03 / SKILL</div>
@@ -2498,7 +2498,7 @@
       </div>
       <div class="skill-arrow"></div>
     </div>
-    <div class="arsenal-skill-card" data-kind="prism" data-accent="#ff3d1f">
+    <div class="arsenal-skill-card" data-skill="content" data-kind="prism" data-accent="#ff3d1f" style="cursor: pointer;">
       <div class="skill-canvas"></div>
       <div class="skill-meta">
         <div class="skill-num">04 / SKILL</div>
@@ -2506,7 +2506,7 @@
       </div>
       <div class="skill-arrow"></div>
     </div>
-    <div class="arsenal-skill-card" data-kind="wave" data-accent="#ff5a2a">
+    <div class="arsenal-skill-card" data-skill="email" data-kind="wave" data-accent="#ff5a2a" style="cursor: pointer;">
       <div class="skill-canvas"></div>
       <div class="skill-meta">
         <div class="skill-num">05 / SKILL</div>
@@ -2514,7 +2514,7 @@
       </div>
       <div class="skill-arrow"></div>
     </div>
-    <div class="arsenal-skill-card" data-kind="helix" data-accent="#ff7a3a">
+    <div class="arsenal-skill-card" data-skill="branding" data-kind="helix" data-accent="#ff7a3a" style="cursor: pointer;">
       <div class="skill-canvas"></div>
       <div class="skill-meta">
         <div class="skill-num">06 / SKILL</div>
@@ -2522,7 +2522,7 @@
       </div>
       <div class="skill-arrow"></div>
     </div>
-    <div class="arsenal-skill-card" data-kind="network" data-accent="#ff3d1f">
+    <div class="arsenal-skill-card" data-skill="ki" data-kind="network" data-accent="#ff3d1f" style="cursor: pointer;">
       <div class="skill-canvas"></div>
       <div class="skill-meta">
         <div class="skill-num">07 / SKILL</div>
@@ -4193,10 +4193,96 @@ function onLayoutCross(e) {
 if (phoneMQ.addEventListener) phoneMQ.addEventListener('change', onLayoutCross);
 else phoneMQ.addListener(onLayoutCross); // Safari < 14 fallback
  
-/* ============== ARSENAL — HOLOGRAPHIC SKILL NEXUS ============== */
-// Build the heavy fly-through only when there's enough room. Phones get a sleek card stack.
-const isPhoneLayout = window.matchMedia('(max-width: 768px)').matches;
- 
+/* ============== ARSENAL — DRAWER LOGIC (GLOBAL) ============== */
+const drawer = document.getElementById('drawer');
+const drawerOverlay = document.getElementById('drawerOverlay');
+const drawerClose = document.getElementById('drawerClose');
+const drawerNum = document.getElementById('drawerNum');
+const drawerTitle = document.getElementById('drawerTitle');
+const drawerTag = document.getElementById('drawerTag');
+const drawerTools = document.getElementById('drawerTools');
+const drawerProjects = document.getElementById('drawerProjects');
+
+const skillData = {
+  web: {
+    num: '01 / SKILL', title: 'Web Development',
+    tag: 'Modernste Tech-Stacks und cinema-grade Frontends. React, Three.js, Next.js — performant gebaut, eigensinnig gestaltet.',
+    tools: ['React', 'Next.js', 'Three.js', 'GSAP', 'Lenis', 'TypeScript', 'Vite', 'Tailwind', 'HTML5 / CSS'],
+    projects: [{ name: 'Elbe-Hypnose', year: '2026' }, { name: 'Aura Clean Service', year: '2026' }, { name: 'Kolonaki Barbershop', year: '2026' }],
+  },
+  webdesign: {
+    num: '02 / SKILL', title: 'Web Design',
+    tag: 'Design das funktioniert und konvertiert. Ästhetik vereint mit psychologischer Nutzerführung für digitale Exzellenz.',
+    tools: ['Canva', 'UI/UX Design', 'Wireframing', 'Prototyping', 'Design Systems'],
+    projects: [{ name: 'Pixel Light UI', year: '2026' }, { name: 'Therapiezentrum Frieda', year: '2026' }],
+  },
+  seo: {
+    num: '03 / SKILL', title: 'Google SEO',
+    tag: 'Sichtbarkeit ist kein Zufall. Technische Perfektion und datengetriebene Content-Strategien für echte Rankings.',
+    tools: ['Technical SEO', 'Keyword Research', 'On-Page', 'Off-Page', 'Analytics'],
+    projects: [{ name: 'Therapiezentrum Frieda', year: '2026' }, { name: 'Pixellight.studio', year: '2026' }, { name: 'Local SEO Strategy', year: '2026' }, { name: 'SEO Ranking', year: '2026' }],
+  },
+  content: {
+    num: '04 / SKILL', title: 'Content Production',
+    tag: 'Visuelles Storytelling. Hochwertige Fotografie und Content-Produktion, die die Essenz der Marke einfängt.',
+    tools: ['Photography', 'Lightroom', 'Remotion', 'CapCut', 'Art Direction', 'Storyboarding'],
+    projects: [{ name: 'Ehemalig Mit den Jungz', year: '2026' }, { name: 'Tiktok Teamjntsch', year: '2026' }, { name: 'Black Cobra Fight Club', year: '2026' }],
+  },
+  email: {
+    num: '05 / SKILL', title: 'Email Marketing',
+    tag: 'Automatisierte Sales-Funnel und Newsletter, die gelesen werden. Direkt, personalisiert und conversion-optimiert.',
+    tools: ['Klaviyo', 'ActiveCampaign', 'Copywriting', 'A/B Testing', 'Automation'],
+    projects: [{ name: 'Launch Sequence', year: '2026' }, { name: 'Nurture Funnel', year: '2026' }],
+  },
+  branding: {
+    num: '06 / SKILL', title: 'Logo / Branding',
+    tag: 'Identität als System. Voice, Direction, Visual Language — von der ersten Skizze bis zum konsistenten Brand-Kosmos.',
+    tools: ['Figma', 'Illustrator', 'Brand Strategy', 'Voice Design', 'Typography'],
+    projects: [{ name: 'Pixel Light Identity', year: '2026' }, { name: 'NoWi Car Pool', year: '2026' }],
+  },
+  ki: {
+    num: '07 / SKILL', title: 'KI - Kurse - Integration',
+    tag: 'Die Zukunft der Automatisierung. Implementierung von KI-Workflows und maßgeschneiderte Trainings für Teams.',
+    tools: ['ChatGPT', 'Midjourney', 'Custom GPTs', 'Workflow Automation', 'Prompt Engineering', 'Claude', 'Gemini', 'Kimi', 'Higgsfield'],
+    projects: [{ name: 'AI Workflow Integration', year: '2026' }, { name: 'Prompt Masterclass', year: '2026' }, { name: 'How to use AI', year: '2026' }],
+  },
+};
+
+let lastFocused = null;
+function openDrawer(key) {
+  const data = skillData[key];
+  if (!data || !drawer) return;
+  drawerNum.textContent = data.num;
+  drawerTitle.textContent = data.title;
+  drawerTag.textContent = data.tag;
+  drawerTools.innerHTML = data.tools.map(t => `<span>${t}</span>`).join('');
+  drawerProjects.innerHTML = data.projects.map(p =>
+    `<div class="drawer-project"><span class="pname">${p.name}</span><span class="pyear">${p.year}</span></div>`
+  ).join('');
+  drawer.classList.add('open');
+  drawer.setAttribute('aria-hidden', 'false');
+  drawerOverlay.classList.add('open');
+  document.body.classList.add('drawer-locked');
+  if (typeof lenis !== 'undefined' && lenis) lenis.stop();
+  lastFocused = document.activeElement;
+  setTimeout(() => drawerClose.focus(), 400);
+}
+function closeDrawer() {
+  if (!drawer) return;
+  drawer.classList.remove('open');
+  drawer.setAttribute('aria-hidden', 'true');
+  drawerOverlay.classList.remove('open');
+  document.body.classList.remove('drawer-locked');
+  if (typeof lenis !== 'undefined' && lenis) lenis.start();
+  if (lastFocused) lastFocused.focus();
+}
+
+if (drawerClose) drawerClose.addEventListener('click', closeDrawer);
+if (drawerOverlay) drawerOverlay.addEventListener('click', closeDrawer);
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && drawer && drawer.classList.contains('open')) closeDrawer();
+});
+
 if (isPhoneLayout) {
   // === Mobile: tiny per-card Three.js scenes, with stagger reveal + velocity spin ===
   (function arsenalMobile() {
@@ -4218,6 +4304,11 @@ if (isPhoneLayout) {
     cards.forEach((card, idx) => {
       card.dataset.idx = idx;
       cardObserver.observe(card);
+      
+      // Open drawer on mobile tap
+      card.addEventListener('click', () => {
+        openDrawer(card.dataset.skill);
+      });
  
       const kind = card.dataset.kind;
       const accent = parseInt(card.dataset.accent.replace('#', '0x'));
@@ -4481,125 +4572,11 @@ if (isPhoneLayout) {
       animate();
     });
  
-    // === Drawer logic ===
-    const drawer = document.getElementById('drawer');
-    const drawerOverlay = document.getElementById('drawerOverlay');
-    const drawerClose = document.getElementById('drawerClose');
-    const drawerNum = document.getElementById('drawerNum');
-    const drawerTitle = document.getElementById('drawerTitle');
-    const drawerTag = document.getElementById('drawerTag');
-    const drawerTools = document.getElementById('drawerTools');
-    const drawerProjects = document.getElementById('drawerProjects');
- 
-            const skillData = {
-      web: {
-        num: '01 / SKILL', title: 'Web Development',
-        tag: 'Modernste Tech-Stacks und cinema-grade Frontends. React, Three.js, Next.js — performant gebaut, eigensinnig gestaltet.',
-        tools: ['React', 'Next.js', 'Three.js', 'GSAP', 'Lenis', 'TypeScript', 'Vite', 'Tailwind', 'HTML5 / CSS'],
-        projects: [
-          { name: 'Elbe-Hypnose', year: '2026' },
-          { name: 'Aura Clean Service', year: '2026' },
-          { name: 'Kolonaki Barbershop', year: '2026' },
-        ],
-      },
-      webdesign: {
-        num: '02 / SKILL', title: 'Web Design',
-        tag: 'Design das funktioniert und konvertiert. Ästhetik vereint mit psychologischer Nutzerführung für digitale Exzellenz.',
-        tools: ['Canva', 'UI/UX Design', 'Wireframing', 'Prototyping', 'Design Systems'],
-        projects: [
-          { name: 'Pixel Light UI', year: '2026' },
-          { name: 'Therapiezentrum Frieda', year: '2026' },
-        ],
-      },
-      seo: {
-        num: '03 / SKILL', title: 'Google SEO',
-        tag: 'Sichtbarkeit ist kein Zufall. Technische Perfektion und datengetriebene Content-Strategien für echte Rankings.',
-        tools: ['Technical SEO', 'Keyword Research', 'On-Page', 'Off-Page', 'Analytics'],
-        projects: [
-          { name: 'Therapiezentrum Frieda', year: '2026' },
-          { name: 'Pixellight.studio', year: '2026' },
-          { name: 'Local SEO Strategy', year: '2026' },
-          { name: 'SEO Ranking', year: '2026' },
-        ],
-      },
-      content: {
-        num: '04 / SKILL', title: 'Content Production',
-        tag: 'Visuelles Storytelling. Hochwertige Fotografie und Content-Produktion, die die Essenz der Marke einfängt.',
-        tools: ['Photography', 'Lightroom', 'Remotion', 'CapCut', 'Art Direction', 'Storyboarding'],
-        projects: [
-          { name: 'Ehemalig Mit den Jungz', year: '2026' },
-          { name: 'Tiktok Teamjntsch', year: '2026' },
-          { name: 'Black Cobra Fight Club', year: '2026' },
-        ],
-      },
-      email: {
-        num: '05 / SKILL', title: 'Email Marketing',
-        tag: 'Automatisierte Sales-Funnel und Newsletter, die gelesen werden. Direkt, personalisiert und conversion-optimiert.',
-        tools: ['Klaviyo', 'ActiveCampaign', 'Copywriting', 'A/B Testing', 'Automation'],
-        projects: [
-          { name: 'Launch Sequence', year: '2026' },
-          { name: 'Nurture Funnel', year: '2026' },
-        ],
-      },
-      branding: {
-        num: '06 / SKILL', title: 'Logo / Branding',
-        tag: 'Identität als System. Voice, Direction, Visual Language — von der ersten Skizze bis zum konsistenten Brand-Kosmos.',
-        tools: ['Figma', 'Illustrator', 'Brand Strategy', 'Voice Design', 'Typography'],
-        projects: [
-          { name: 'Pixel Light Identity', year: '2026' },
-          { name: 'NoWi Car Pool', year: '2026' },
-        ],
-      },
-      ki: {
-        num: '07 / SKILL', title: 'KI - Kurse - Integration',
-        tag: 'Die Zukunft der Automatisierung. Implementierung von KI-Workflows und maßgeschneiderte Trainings für Teams.',
-        tools: ['ChatGPT', 'Midjourney', 'Custom GPTs', 'Workflow Automation', 'Prompt Engineering', 'Claude', 'Gemini', 'Kimi', 'Higgsfield'],
-        projects: [
-          { name: 'AI Workflow Integration', year: '2026' },
-          { name: 'Prompt Masterclass', year: '2026' },
-          { name: 'How to use AI', year: '2026' },
-        ],
-      },
-    };
- 
-    let lastFocused = null;
-    function openDrawer(key) {
-      const data = skillData[key];
-      if (!data) return;
-      drawerNum.textContent = data.num;
-      drawerTitle.textContent = data.title;
-      drawerTag.textContent = data.tag;
-      drawerTools.innerHTML = data.tools.map(t => `<span>${t}</span>`).join('');
-      drawerProjects.innerHTML = data.projects.map(p =>
-        `<div class="drawer-project"><span class="pname">${p.name}</span><span class="pyear">${p.year}</span></div>`
-      ).join('');
-      drawer.classList.add('open');
-      drawer.setAttribute('aria-hidden', 'false');
-      drawerOverlay.classList.add('open');
-      document.body.classList.add('drawer-locked');
-      if (typeof lenis !== 'undefined' && lenis) lenis.stop();
-      lastFocused = document.activeElement;
-      setTimeout(() => drawerClose.focus(), 400);
-    }
-    function closeDrawer() {
-      drawer.classList.remove('open');
-      drawer.setAttribute('aria-hidden', 'true');
-      drawerOverlay.classList.remove('open');
-      document.body.classList.remove('drawer-locked');
-      if (typeof lenis !== 'undefined' && lenis) lenis.start();
-      if (lastFocused) lastFocused.focus();
-    }
- 
     document.querySelectorAll('.acc-btn').forEach(btn => {
       btn.addEventListener('click', e => {
         e.stopPropagation();
         openDrawer(btn.dataset.drawer);
       });
-    });
-    drawerClose.addEventListener('click', closeDrawer);
-    drawerOverlay.addEventListener('click', closeDrawer);
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape' && drawer.classList.contains('open')) closeDrawer();
     });
   })();
 }
