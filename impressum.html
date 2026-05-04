@@ -57,6 +57,7 @@
     .back-btn {
       display: inline-block;
       margin-top: 4rem;
+      margin-bottom: 4rem;
       padding: 12px 24px;
       border: 1px solid var(--ink-dim);
       border-radius: 30px;
@@ -65,9 +66,24 @@
       font-size: 0.85rem;
       letter-spacing: 0.1em;
     }
+    .close-x {
+      position: absolute;
+      top: 30px;
+      right: 30px;
+      font-size: 24px;
+      color: var(--ink-dim);
+      text-decoration: none;
+      transition: color 0.3s, transform 0.3s;
+    }
+    .close-x:hover {
+      color: var(--signal, #ff3d1f);
+      transform: scale(1.1);
+      opacity: 1;
+    }
   </style>
 </head>
 <body>
+  <a href="/" class="close-x" aria-label="Schließen">✕</a>
   <div class="container">
     <h1>Impressum</h1>
     
@@ -75,20 +91,18 @@
     <p>
       Damon Fieberg<br>
       Pixel Light Studio<br>
-      [BITTE STRASSE UND HAUSNUMMER EINTRAGEN]<br>
-      [BITTE PLZ EINTRAGEN] Magdeburg
+      Magdeburg
     </p>
 
     <h2>Kontakt</h2>
     <p>
-      E-Mail: <a href="mailto:hello@pixellight.studio">hello@pixellight.studio</a><br>
-      Telefon: [BITTE TELEFONNUMMER EINTRAGEN]
+      E-Mail: <a href="mailto:damon@pixellight.studio">damon@pixellight.studio</a><br>
+      Telefon: 0177/9601462
     </p>
 
     <h2>Umsatzsteuer-ID</h2>
     <p>
-      [ENTWEDER: Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz: DE...]<br>
-      [ODER BEI KLEINUNTERNEHMERN: "Als Kleinunternehmer im Sinne von § 19 Abs. 1 UStG wird keine Umsatzsteuer berechnet."]
+      Folgt (Aktuell in der Gründungsphase, keine offizielle Annahme von Aufträgen).
     </p>
 
     <h2>Verbraucherstreitbeilegung/Universalschlichtungsstelle</h2>
