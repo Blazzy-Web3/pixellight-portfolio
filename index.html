@@ -173,7 +173,7 @@
   .hero {
     position: relative;
     height: 100vh;
-    height: 100dvh;
+    height: 100svh; /* Use svh so the container doesn't constantly resize when mobile address bar hides */
     min-height: 720px;
     overflow: hidden;
     background: radial-gradient(ellipse at 50% 100%, #2a0805 0%, #0c0608 35%, var(--bg) 70%);
@@ -3151,9 +3151,16 @@ setTimeout(finishPreloader, 2800);
 const resizeHandlers = new Set();
 function onResize(fn) { resizeHandlers.add(fn); return fn; }
 let resizeTimer;
+let lastWinWidth = window.innerWidth;
 window.addEventListener('resize', () => {
   clearTimeout(resizeTimer);
   resizeTimer = setTimeout(() => {
+    const currentWidth = window.innerWidth;
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+    // On mobile, only trigger heavy WebGL resizes if the WIDTH changes (e.g. rotation).
+    // This prevents the address-bar scroll from destroying the aspect ratio and tanking performance.
+    if (isMobile && currentWidth === lastWinWidth) return;
+    lastWinWidth = currentWidth;
     resizeHandlers.forEach(fn => { try { fn(); } catch(e) { console.error(e); } });
   }, 200);
 });
