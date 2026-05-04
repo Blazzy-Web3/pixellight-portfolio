@@ -4283,6 +4283,8 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape' && drawer && drawer.classList.contains('open')) closeDrawer();
 });
 
+const isPhoneLayout = window.matchMedia('(max-width: 768px)').matches;
+
 if (isPhoneLayout) {
   // === Mobile: tiny per-card Three.js scenes, with stagger reveal + velocity spin ===
   (function arsenalMobile() {
