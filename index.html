@@ -3049,18 +3049,20 @@ function initGsapScrollFlow() {
  
   // 1. HERO DEPTH FADE (no pinning — just opacity/scale on the canvas as user scrolls past)
   // Scrolls naturally; the hero content fades + scales for depth as About comes into view
-  gsap.to("#hero-canvas, .hero-content", {
-    opacity: 0.15,
-    scale: 0.96,
-    ease: "none",
-    scrollTrigger: {
-      trigger: ".hero",
-      start: "top top",
-      end: "bottom top",
-      scrub: 0.6,
-      invalidateOnRefresh: true,
-    }
-  });
+  if (!isPhoneLayout) {
+    gsap.to("#hero-canvas, .hero-content", {
+      opacity: 0.15,
+      scale: 0.96,
+      ease: "none",
+      scrollTrigger: {
+        trigger: ".hero",
+        start: "top top",
+        end: "bottom top",
+        scrub: 0.6,
+        invalidateOnRefresh: true,
+      }
+    });
+  }
  
   // 2. SELECTED WORKS PARALLAX (desktop/tablet only)
   if (!isPhoneLayout) {
@@ -3841,6 +3843,10 @@ const splash = new THREE.Points(splashGeom, splashMat);
     renderer.render(scene, camera);
     requestAnimationFrame(animate);
   }
+  
+  // Pre-compile shaders to eliminate scroll jank when it enters viewport
+  renderer.compile(scene, camera);
+  
   registerAnim(canvas, animate);
   animObserver.observe(canvas);
   animate();
@@ -4448,6 +4454,10 @@ if (isPhoneLayout) {
         renderer.render(scene, camera);
         requestAnimationFrame(animate);
       }
+      
+      // Pre-compile shaders to prevent massive framedrops on mobile scroll
+      renderer.compile(scene, camera);
+      
       registerAnim(cv, animate);
       animObserver.observe(cv);
       animate();
