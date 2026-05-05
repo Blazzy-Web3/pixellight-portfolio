@@ -426,15 +426,34 @@
   @media (max-width: 1024px) {
     .about-me { padding: 100px 40px; }
     .about-grid { grid-template-columns: 1fr; gap: 50px; text-align: center; }
-    .about-image-wrapper { justify-self: center; max-width: 380px; }
+    .about-image-wrapper { justify-self: center; max-width: 380px; aspect-ratio: 2 / 3; }
     .about-text { margin: 0 auto; }
     .about-p { margin: 30px auto 0; }
     .signature { justify-content: center; }
-    .about-frame.bottom, .about-frame { display: none; }
+    /* Swap desktop corner-frames for a sleek single accent line on mobile */
+    .about-frame { display: none; }
+    .about-frame.bottom {
+      display: block;
+      top: auto; left: auto; right: auto;
+      bottom: -10px; left: 10%; right: 10%;
+      width: 80%; height: 1px;
+      border: none;
+      background: linear-gradient(90deg, transparent, var(--signal) 30%, var(--signal) 70%, transparent);
+      opacity: 0.5;
+    }
   }
   @media (max-width: 768px) {
     .about-me { padding: 80px 20px; }
-    .about-image-wrapper { max-width: 320px; }
+    .about-image-wrapper {
+      max-width: 300px;
+      aspect-ratio: 2 / 3;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.06);
+    }
+    #portrait-canvas {
+      border-radius: 6px;
+    }
   }
  
   /* === ARSENAL — CINEMATIC ACCORDION === */
@@ -3827,8 +3846,9 @@ const splash = new THREE.Points(splashGeom, splashMat);
  
   function resize() {
     const r = canvas.parentElement.getBoundingClientRect();
+    const isMobilePortrait = window.matchMedia('(max-width: 768px)').matches;
     renderer.setSize(r.width, r.height, false);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobilePortrait ? 1.5 : 2));
     mat.uniforms.uPlaneAspect.value = r.width / r.height;
     updateCoverScale();
   }
