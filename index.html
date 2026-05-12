@@ -2910,9 +2910,19 @@
  
 <script>
 /* ============== TOUCH DETECTION ============== */
-const isTouch = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+const isTouch = window.matchMedia('(hover: none) and (pointer: coarse)').matches || ('ontouchstart' in window && navigator.maxTouchPoints > 0);
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 document.documentElement.classList.toggle('is-touch', isTouch);
+
+// Safety net: if any canvas loses its WebGL context, hide it immediately
+document.querySelectorAll('canvas').forEach(c => {
+  c.addEventListener('webglcontextlost', e => {
+    e.preventDefault();
+    c.style.display = 'none';
+    const fb = c.parentElement?.querySelector('.portrait-fallback');
+    if (fb) fb.style.display = 'block';
+  });
+});
  
 /* ============== WEB AUDIO API: SYNTHESIZED SOUND DESIGN ============== */
 const SoundManager = (function() {
@@ -3427,14 +3437,12 @@ if (contactForm) {
    spawn 3D points (glass-like) at sampled positions, animate splash. */
 (function heroScene() {
   const canvas = document.getElementById('hero-canvas');
+  // On touch: skip WebGL entirely, the dark gradient background shows through
+  if (isTouch) { canvas.style.display = 'none'; return; }
   let renderer;
   try {
     renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-  } catch(e) {
-    console.warn('WebGL failed for hero, hiding canvas');
-    canvas.style.display = 'none';
-    return;
-  }
+  } catch(e) { canvas.style.display = 'none'; return; }
   if (!renderer.getContext()) { canvas.style.display = 'none'; return; }
   renderer.setClearColor(0x000000, 0);
   const scene = new THREE.Scene();
@@ -3935,6 +3943,7 @@ const splash = new THREE.Points(splashGeom, splashMat);
 (function credentialsScene() {
   const canvas = document.getElementById('credentials-canvas');
   if (!canvas) return;
+  if (isTouch) { canvas.style.display = 'none'; return; }
   let renderer;
   try {
     renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
@@ -4062,6 +4071,7 @@ const splash = new THREE.Points(splashGeom, splashMat);
   const portal = document.getElementById('gatePortal');
   const gateSection = document.getElementById('gate');
   
+  if (isTouch) { canvas.style.display = 'none'; return; }
   let renderer;
   try {
     renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
@@ -4396,6 +4406,9 @@ if (isPhoneLayout) {
         openDrawer(card.dataset.skill);
       });
  
+      // Skip mini 3D icons on touch devices — saves 7 WebGL contexts
+      if (isTouch) return;
+
       const kind = card.dataset.kind;
       const accent = parseInt(card.dataset.accent.replace('#', '0x'));
       const host = card.querySelector('.skill-canvas');
