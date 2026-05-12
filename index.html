@@ -5,8 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <meta name="theme-color" content="#08060a" />
 <title>PIXEL LIGHT — Digital Crafted Experiences</title>
-<link rel="icon" type="image/png" href="favicon.png" />
-<link rel="apple-touch-icon" href="favicon.png" />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23000'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='18' font-weight='bold' fill='%23ff3d1f' text-anchor='middle'%3EP%3C/text%3E%3C/svg%3E" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500;1,600&family=Inter+Tight:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
@@ -112,6 +111,19 @@
     display: flex; justify-content: space-between; align-items: flex-start;
     z-index: 100;
     mix-blend-mode: difference;
+    /* Force own compositing layer — fixes Android Chrome rendering bug
+       where difference-blend leaks the layer below through fixed-position elements */
+    isolation: isolate;
+    will-change: transform;
+    transform: translateZ(0);
+  }
+  /* Android-specific: difference mode is unreliable, fall back to solid colors */
+  @supports (-webkit-touch-callout: none) {
+    /* iOS — keep difference */
+  }
+  @media not all and (-webkit-min-device-pixel-ratio: 0), 
+         not all and (min-resolution: .001dpcm) {
+    /* never matches — placeholder */
   }
   .logo {
     font-family: var(--display);
@@ -172,11 +184,17 @@
   /* === HERO === */
   .hero {
     position: relative;
+    /* Stable height priority: svh (no address-bar bouncing), 
+       fallback to vh, fallback to fixed 100% of initial viewport */
     height: 100vh;
-    height: 100svh; /* Use svh so the container doesn't constantly resize when mobile address bar hides */
-    min-height: 720px;
+    height: 100svh;
+    min-height: 600px;
     overflow: hidden;
     background: radial-gradient(ellipse at 50% 100%, #2a0805 0%, #0c0608 35%, var(--bg) 70%);
+  }
+  @supports not (height: 100svh) {
+    /* Older Android Chrome (< 108) — use a JS-set CSS variable instead */
+    .hero { height: calc(var(--vh, 1vh) * 100); }
   }
   #hero-canvas {
     position: absolute; inset: 0;
@@ -1791,6 +1809,24 @@
   }
  
   /* ============================================== */
+  /* ====== ANDROID CHROME — mix-blend-mode is broken with fixed + WebGL ====== */
+  /* Detect Android via @supports trick: only Chrome on Android lacks -webkit-touch-callout */
+  html.is-android nav.top {
+    mix-blend-mode: normal;
+    background: linear-gradient(180deg, rgba(8,6,10,0.65) 0%, rgba(8,6,10,0) 100%);
+    backdrop-filter: blur(8px) saturate(1.2);
+    -webkit-backdrop-filter: blur(8px) saturate(1.2);
+  }
+  html.is-android nav.top .logo,
+  html.is-android nav.top .nav-links a {
+    color: var(--ink);
+  }
+  html.is-android .hero-edge {
+    /* Edge labels also use difference indirectly via parent — force solid */
+    color: rgba(244,239,230,0.7);
+  }
+
+  /* ============================================== */
   /* === TABLET & SMALL DESKTOP (< 1024px) === */
   /* ============================================== */
   @media (max-width: 1024px) {
@@ -1852,7 +1888,9 @@
   @media (max-width: 768px) {
     nav.top { padding: 18px 20px; }
  
-    .hero { min-height: 620px; height: 100dvh; }
+    .hero { min-height: 580px; height: 100svh; }
+    /* Note: 100dvh causes janky resizes on Android when scrolling because the address bar
+       hides/shows. 100svh is the small viewport — stable, doesn't shift. Better UX. */
     .hero-content { padding: 0 20px 8vh; }
     .hero-edge { display: none; }
     .scroll-indicator { right: 20px; bottom: 24px; font-size: 9px; }
@@ -2908,6 +2946,20 @@
 <script>
 /* ============== TOUCH DETECTION ============== */
 const isTouch = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+const isAndroid = /Android/i.test(navigator.userAgent);
+document.documentElement.classList.toggle('is-android', isAndroid);
+
+// Optional: set a CSS variable for fallback viewport height
+(function setVH() {
+  const vh = window.innerHeight * 0.01;
+  document.documentElement.style.setProperty('--vh', vh + 'px');
+})();
+window.addEventListener('orientationchange', () => {
+  setTimeout(() => {
+    const vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', vh + 'px');
+  }, 100);
+});
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 document.documentElement.classList.toggle('is-touch', isTouch);
  
@@ -3422,7 +3474,7 @@ if (contactForm) {
 /* ============== HERO — GLASS PIXEL LIGHT TYPO ==============
    Approach: render "PIXEL / LIGHT" to an offscreen canvas, sample alpha,
    spawn 3D points (glass-like) at sampled positions, animate splash. */
-(function heroScene() {
+function initHeroScene() {
   const canvas = document.getElementById('hero-canvas');
   const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
   renderer.setClearColor(0x000000, 0);
@@ -3440,19 +3492,11 @@ if (contactForm) {
     composer.addPass(bloom);
   }
  
-  // On mobile, lock the initial canvas height so the address bar hide/show
-  // can never stretch the WebGL buffer (the "PIXEL LIGHT" particle distortion bug).
-  const heroInitW = canvas.clientWidth;
-  const heroInitH = canvas.clientHeight;
   const heroIsMobile = window.matchMedia('(max-width: 768px)').matches;
-  if (heroIsMobile) {
-    canvas.style.height = heroInitH + 'px';
-  }
 
   function resize() {
     const w = canvas.clientWidth;
-    // On mobile, always use the locked initial height to prevent address-bar distortion
-    const h = heroIsMobile ? heroInitH : canvas.clientHeight;
+    const h = canvas.clientHeight;
     renderer.setSize(w, h, false);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, heroIsMobile ? 1.5 : 2));
     if (composer) composer.setSize(w, h);
@@ -3716,7 +3760,19 @@ const splash = new THREE.Points(splashGeom, splashMat);
   registerAnim(canvas, animate);
   animObserver.observe(canvas);
   animate();
-})();
+}
+
+// Wait for viewport to stabilize on Android — address bar settle + first paint
+if (/Android/i.test(navigator.userAgent)) {
+  // Two RAFs + small delay = guaranteed past first layout & first paint
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      setTimeout(initHeroScene, 50);
+    });
+  });
+} else {
+  initHeroScene();
+}
  
  
 /* ============== WORK VIDEOS — pause when off-screen ============== */
