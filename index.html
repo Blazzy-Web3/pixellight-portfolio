@@ -346,7 +346,8 @@
     width: 100%;
   }
   .about-img,
-  #portrait-canvas {
+  #portrait-canvas,
+  .portrait-fallback {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -356,6 +357,7 @@
     border-radius: 2px;
     filter: contrast(1.05) drop-shadow(0 30px 60px rgba(0,0,0,0.55));
   }
+  .portrait-fallback { display: none; }
   #portrait-canvas {
     cursor: none;
   }
@@ -2345,7 +2347,7 @@
  
 <!-- HERO -->
 <section class="hero" id="hero">
-  <canvas id="hero-canvas" role="img" aria-label="Animierte Glas-Partikel-Typografie der Worte PIXEL LIGHT mit roter Flüssigkeitsexplosion, reagiert auf Mausbewegung"></canvas>
+  <canvas id="hero-canvas"></canvas>
   <div class="hero-edge tl ui-layer">
     <span class="ed-num">N° 01</span>Pixel Light — Digital Experiences
     <span class="ed-line"></span>
@@ -2377,7 +2379,8 @@
       <div class="about-frame"></div>
       <div class="about-frame bottom"></div>
       <div class="about-glow"></div>
-      <canvas id="portrait-canvas" aria-label="Portrait Damon Fieberg mit interaktivem Distortion-Effekt"></canvas>
+      <canvas id="portrait-canvas"></canvas>
+      <img class="portrait-fallback" src="assets/portrait.jpg" alt="Damon Fieberg" loading="lazy">
     </div>
     <div class="about-text reveal" style="transition-delay: .15s;">
       <div class="label">/ Der Architekt</div>
@@ -2644,7 +2647,7 @@
 <!-- CREDENTIALS -->
 <section class="credentials" id="mindscape">
   <div class="wave-background">
-    <canvas id="credentials-canvas" role="img" aria-label="Holografisches topografisches Höhenfeld als Hintergrund"></canvas>
+    <canvas id="credentials-canvas"></canvas>
   </div>
   <div class="label reveal">04 / Credentials</div>
   <div class="cert-grid">
@@ -2817,7 +2820,7 @@
         <p class="sub reveal" style="transition-delay:.1s">Tritt ein.</p>
       </div>
       <div class="gate-portal" id="gatePortal" role="button" tabindex="0" aria-label="Portal aktivieren">
-        <canvas id="gate-canvas" role="img" aria-label="Animiertes Gravitations-Portal mit Wirbel-Effekt beim Klick"></canvas>
+        <canvas id="gate-canvas"></canvas>
         <div class="gate-plus">+</div>
       </div>
       <div class="gate-right">
@@ -3424,7 +3427,15 @@ if (contactForm) {
    spawn 3D points (glass-like) at sampled positions, animate splash. */
 (function heroScene() {
   const canvas = document.getElementById('hero-canvas');
-  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  let renderer;
+  try {
+    renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  } catch(e) {
+    console.warn('WebGL failed for hero, hiding canvas');
+    canvas.style.display = 'none';
+    return;
+  }
+  if (!renderer.getContext()) { canvas.style.display = 'none'; return; }
   renderer.setClearColor(0x000000, 0);
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
@@ -3736,8 +3747,24 @@ const splash = new THREE.Points(splashGeom, splashMat);
 (function portraitDistortion() {
   const canvas = document.getElementById('portrait-canvas');
   if (!canvas) return;
- 
-  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+
+  // On touch devices, skip WebGL — show static image fallback
+  if (isTouch) {
+    canvas.style.display = 'none';
+    const fb = canvas.parentElement.querySelector('.portrait-fallback');
+    if (fb) fb.style.display = 'block';
+    return;
+  }
+
+  let renderer;
+  try {
+    renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  } catch(e) {
+    canvas.style.display = 'none';
+    const fb = canvas.parentElement.querySelector('.portrait-fallback');
+    if (fb) fb.style.display = 'block';
+    return;
+  }
   renderer.setClearColor(0x000000, 0);
   const scene = new THREE.Scene();
   // Plane fills the entire ortho frustum (-1..1)
@@ -3908,7 +3935,10 @@ const splash = new THREE.Points(splashGeom, splashMat);
 (function credentialsScene() {
   const canvas = document.getElementById('credentials-canvas');
   if (!canvas) return;
-  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  let renderer;
+  try {
+    renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  } catch(e) { canvas.style.display = 'none'; return; }
   renderer.setClearColor(0x000000, 0);
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
@@ -4032,7 +4062,10 @@ const splash = new THREE.Points(splashGeom, splashMat);
   const portal = document.getElementById('gatePortal');
   const gateSection = document.getElementById('gate');
   
-  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  let renderer;
+  try {
+    renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  } catch(e) { canvas.style.display = 'none'; return; }
   renderer.setClearColor(0x000000, 0); // Transparent background
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
