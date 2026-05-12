@@ -346,8 +346,7 @@
     width: 100%;
   }
   .about-img,
-  #portrait-canvas,
-  .portrait-fallback {
+  #portrait-canvas {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -356,9 +355,6 @@
     z-index: 2;
     border-radius: 2px;
     filter: contrast(1.05) drop-shadow(0 30px 60px rgba(0,0,0,0.55));
-  }
-  .portrait-fallback {
-    display: none; /* Hidden by default, shown via JS on touch devices */
   }
   #portrait-canvas {
     cursor: none;
@@ -1856,7 +1852,7 @@
   @media (max-width: 768px) {
     nav.top { padding: 18px 20px; }
  
-    .hero { min-height: auto; height: 100svh; }
+    .hero { min-height: 620px; height: 100dvh; }
     .hero-content { padding: 0 20px 8vh; }
     .hero-edge { display: none; }
     .scroll-indicator { right: 20px; bottom: 24px; font-size: 9px; }
@@ -2382,7 +2378,6 @@
       <div class="about-frame bottom"></div>
       <div class="about-glow"></div>
       <canvas id="portrait-canvas" aria-label="Portrait Damon Fieberg mit interaktivem Distortion-Effekt"></canvas>
-      <img class="portrait-fallback" src="assets/portrait.jpg" alt="Damon Fieberg – Pixel Light Studio" loading="lazy">
     </div>
     <div class="about-text reveal" style="transition-delay: .15s;">
       <div class="label">/ Der Architekt</div>
@@ -3741,14 +3736,6 @@ const splash = new THREE.Points(splashGeom, splashMat);
 (function portraitDistortion() {
   const canvas = document.getElementById('portrait-canvas');
   if (!canvas) return;
-
-  // On touch devices, skip WebGL entirely — show the static image fallback
-  if (isTouch) {
-    canvas.style.display = 'none';
-    const fallback = canvas.parentElement.querySelector('.portrait-fallback');
-    if (fallback) fallback.style.display = 'block';
-    return;
-  }
  
   const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
   renderer.setClearColor(0x000000, 0);
