@@ -104,10 +104,6 @@
     background: rgba(255, 61, 31, 0.06);
     mix-blend-mode: normal;
   }
-  @media (pointer: coarse), (hover: none) {
-    .cursor-dot, .cursor-ring { display: none !important; }
-    * { cursor: auto !important; }
-  }
  
   /* === NAV === */
   nav.top {
@@ -177,13 +173,10 @@
   .hero {
     position: relative;
     height: 100vh;
-    height: 100dvh; /* Dynamic viewport height to prevent resize jumps on mobile */
+    height: 100svh; /* Use svh so the container doesn't constantly resize when mobile address bar hides */
     min-height: 720px;
     overflow: hidden;
     background: radial-gradient(ellipse at 50% 100%, #2a0805 0%, #0c0608 35%, var(--bg) 70%);
-  }
-  @media (max-width: 768px) {
-    .hero { min-height: 100svh; }
   }
   #hero-canvas {
     position: absolute; inset: 0;
@@ -2352,7 +2345,7 @@
  
 <!-- HERO -->
 <section class="hero" id="hero">
-  <canvas id="hero-canvas" aria-hidden="true"></canvas>
+  <canvas id="hero-canvas" role="img" aria-label="Animierte Glas-Partikel-Typografie der Worte PIXEL LIGHT mit roter Flüssigkeitsexplosion, reagiert auf Mausbewegung"></canvas>
   <div class="hero-edge tl ui-layer">
     <span class="ed-num">N° 01</span>Pixel Light — Digital Experiences
     <span class="ed-line"></span>
@@ -2384,7 +2377,7 @@
       <div class="about-frame"></div>
       <div class="about-frame bottom"></div>
       <div class="about-glow"></div>
-      <canvas id="portrait-canvas" aria-hidden="true"></canvas>
+      <canvas id="portrait-canvas" aria-label="Portrait Damon Fieberg mit interaktivem Distortion-Effekt"></canvas>
     </div>
     <div class="about-text reveal" style="transition-delay: .15s;">
       <div class="label">/ Der Architekt</div>
@@ -2651,7 +2644,7 @@
 <!-- CREDENTIALS -->
 <section class="credentials" id="mindscape">
   <div class="wave-background">
-    <canvas id="credentials-canvas" aria-hidden="true"></canvas>
+    <canvas id="credentials-canvas" role="img" aria-label="Holografisches topografisches Höhenfeld als Hintergrund"></canvas>
   </div>
   <div class="label reveal">04 / Credentials</div>
   <div class="cert-grid">
@@ -2824,7 +2817,7 @@
         <p class="sub reveal" style="transition-delay:.1s">Tritt ein.</p>
       </div>
       <div class="gate-portal" id="gatePortal" role="button" tabindex="0" aria-label="Portal aktivieren">
-        <canvas id="gate-canvas" aria-hidden="true"></canvas>
+        <canvas id="gate-canvas" role="img" aria-label="Animiertes Gravitations-Portal mit Wirbel-Effekt beim Klick"></canvas>
         <div class="gate-plus">+</div>
       </div>
       <div class="gate-right">
