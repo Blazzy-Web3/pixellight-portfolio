@@ -2910,17 +2910,19 @@
  
 <script>
 /* ============== TOUCH DETECTION ============== */
-const isTouch = window.matchMedia('(hover: none) and (pointer: coarse)').matches || ('ontouchstart' in window && navigator.maxTouchPoints > 0);
+const isTouch = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 document.documentElement.classList.toggle('is-touch', isTouch);
 
-// Safety net: if any canvas loses its WebGL context, hide it immediately
-document.querySelectorAll('canvas').forEach(c => {
-  c.addEventListener('webglcontextlost', e => {
-    e.preventDefault();
-    c.style.display = 'none';
-    const fb = c.parentElement?.querySelector('.portrait-fallback');
-    if (fb) fb.style.display = 'block';
+/* Auto-hide any canvas whose WebGL context is lost (Android GPU limit) */
+window.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('canvas').forEach(c => {
+    c.addEventListener('webglcontextlost', e => {
+      e.preventDefault();
+      c.style.display = 'none';
+      const fb = c.parentElement && c.parentElement.querySelector('.portrait-fallback');
+      if (fb) fb.style.display = 'block';
+    });
   });
 });
  
@@ -3437,13 +3439,7 @@ if (contactForm) {
    spawn 3D points (glass-like) at sampled positions, animate splash. */
 (function heroScene() {
   const canvas = document.getElementById('hero-canvas');
-  // On touch: skip WebGL entirely, the dark gradient background shows through
-  if (isTouch) { canvas.style.display = 'none'; return; }
-  let renderer;
-  try {
-    renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-  } catch(e) { canvas.style.display = 'none'; return; }
-  if (!renderer.getContext()) { canvas.style.display = 'none'; return; }
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
   renderer.setClearColor(0x000000, 0);
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
@@ -3755,24 +3751,8 @@ const splash = new THREE.Points(splashGeom, splashMat);
 (function portraitDistortion() {
   const canvas = document.getElementById('portrait-canvas');
   if (!canvas) return;
-
-  // On touch devices, skip WebGL — show static image fallback
-  if (isTouch) {
-    canvas.style.display = 'none';
-    const fb = canvas.parentElement.querySelector('.portrait-fallback');
-    if (fb) fb.style.display = 'block';
-    return;
-  }
-
-  let renderer;
-  try {
-    renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-  } catch(e) {
-    canvas.style.display = 'none';
-    const fb = canvas.parentElement.querySelector('.portrait-fallback');
-    if (fb) fb.style.display = 'block';
-    return;
-  }
+ 
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
   renderer.setClearColor(0x000000, 0);
   const scene = new THREE.Scene();
   // Plane fills the entire ortho frustum (-1..1)
@@ -3943,11 +3923,7 @@ const splash = new THREE.Points(splashGeom, splashMat);
 (function credentialsScene() {
   const canvas = document.getElementById('credentials-canvas');
   if (!canvas) return;
-  if (isTouch) { canvas.style.display = 'none'; return; }
-  let renderer;
-  try {
-    renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-  } catch(e) { canvas.style.display = 'none'; return; }
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
   renderer.setClearColor(0x000000, 0);
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
@@ -4071,11 +4047,7 @@ const splash = new THREE.Points(splashGeom, splashMat);
   const portal = document.getElementById('gatePortal');
   const gateSection = document.getElementById('gate');
   
-  if (isTouch) { canvas.style.display = 'none'; return; }
-  let renderer;
-  try {
-    renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-  } catch(e) { canvas.style.display = 'none'; return; }
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
   renderer.setClearColor(0x000000, 0); // Transparent background
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
@@ -4406,9 +4378,6 @@ if (isPhoneLayout) {
         openDrawer(card.dataset.skill);
       });
  
-      // Skip mini 3D icons on touch devices — saves 7 WebGL contexts
-      if (isTouch) return;
-
       const kind = card.dataset.kind;
       const accent = parseInt(card.dataset.accent.replace('#', '0x'));
       const host = card.querySelector('.skill-canvas');
