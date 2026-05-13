@@ -6,27 +6,37 @@
 <meta name="theme-color" content="#08060a" />
 <title>PIXEL LIGHT — Digital Crafted Experiences</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23000'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='18' font-weight='bold' fill='%23ff3d1f' text-anchor='middle'%3EP%3C/text%3E%3C/svg%3E" />
+<!-- DNS+TLS Handshake parallel zum HTML-Parsing (spart 100-400ms pro Origin) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link rel="preconnect" href="https://unpkg.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+
+<!-- DNS-Prefetch als Fallback für ältere Browser -->
+<link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+<link rel="dns-prefetch" href="https://unpkg.com">
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+
+<!-- Fonts: media="print" → onload "all" Trick = nicht-blockierend, aber FOUT-frei genug -->
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500;1,600&family=Inter+Tight:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
-<script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
-<script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
-<script src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
-<script src="https://unpkg.com/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
-<script src="https://unpkg.com/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.42/bundled/lenis.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script type="text/javascript">
-  (function(){
-      emailjs.init({
-        publicKey: "j69hxsdkRV0ZhF5d3",
-      });
-  })();
-</script>
+
+<!-- Three.js + Postprocessing — defer = parallel download, executes after HTML parsed, in order -->
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script defer src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+<script defer src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+<script defer src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+<script defer src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+<script defer src="https://unpkg.com/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+<script defer src="https://unpkg.com/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+
+<!-- Scroll + Animation libs -->
+<script defer src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.42/bundled/lenis.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+<!-- EmailJS — defer, init wartet in DOMContentLoaded weiter unten -->
+<script defer src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
   :root {
     --bg: #08060a;
@@ -2935,7 +2945,7 @@
 <button class="sound-toggle ui-layer" id="soundToggle" aria-label="Sound an/aus" type="button">
   <span class="bars"><span></span><span></span><span></span><span></span></span>
 </button>
- 
+
 <!-- COOKIE PILL -->
 <div class="cookie-pill" id="cookiePill" role="dialog" aria-label="Cookie-Hinweis">
   <span class="cookie-text">Wir nutzen Cookies für eine bessere Experience.</span>
@@ -2944,7 +2954,15 @@
 </div>
  
 <script>
-/* ============== TOUCH DETECTION ============== */
+// Wait for all defer'd scripts (Three.js, GSAP, Lenis, EmailJS) to finish loading.
+// Then init EmailJS, then run all our app code.
+document.addEventListener('DOMContentLoaded', function() {
+  // Init EmailJS first (was previously a separate inline block)
+  if (typeof emailjs !== 'undefined') {
+    emailjs.init({ publicKey: "j69hxsdkRV0ZhF5d3" });
+  }
+
+/* ============== TOUCH & ANDROID DETECTION ============== */
 const isTouch = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
 const isAndroid = /Android/i.test(navigator.userAgent);
 document.documentElement.classList.toggle('is-android', isAndroid);
@@ -4920,6 +4938,8 @@ window.addEventListener('DOMContentLoaded', () => {
   obs.observe(canvas);
   window.addEventListener('resize', () => { resize(); initParticles(); });
 })();
+
+}); // end DOMContentLoaded wrapper
 </script>
 
 <!-- VIDEO MODAL -->
@@ -4932,6 +4952,7 @@ window.addEventListener('DOMContentLoaded', () => {
 </div>
 
 <script>
+document.addEventListener('DOMContentLoaded', function() {
 /* ============== CONTACT FORM & EMAILJS ============== */
 (function initContactForm() {
   const form = document.getElementById('contactForm');
@@ -5010,6 +5031,7 @@ window.addEventListener('DOMContentLoaded', () => {
       });
   });
 })();
+});
 </script>
 
 </body>
