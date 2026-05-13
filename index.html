@@ -6,36 +6,27 @@
 <meta name="theme-color" content="#08060a" />
 <title>PIXEL LIGHT — Digital Crafted Experiences</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23000'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='18' font-weight='bold' fill='%23ff3d1f' text-anchor='middle'%3EP%3C/text%3E%3C/svg%3E" />
-<!-- DNS+TLS Handshake parallel zum HTML-Parsing (spart 100-400ms pro Origin) -->
+<!-- Preconnect: DNS+TLS handshake parallel to HTML parsing -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-<link rel="preconnect" href="https://unpkg.com" crossorigin>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-
-<!-- DNS-Prefetch als Fallback für ältere Browser -->
 <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
-<link rel="dns-prefetch" href="https://unpkg.com">
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 
-<!-- Fonts: media="print" → onload "all" Trick = nicht-blockierend, aber FOUT-frei genug -->
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500;1,600&family=Inter+Tight:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 
-<!-- Three.js + Postprocessing — defer = parallel download, executes after HTML parsed, in order -->
+<!-- All scripts defer'd — parallel download, sequential execution after HTML parse -->
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script defer src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
-<script defer src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
-<script defer src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
-<script defer src="https://unpkg.com/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
-<script defer src="https://unpkg.com/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
-<script defer src="https://unpkg.com/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
-
-<!-- Scroll + Animation libs -->
+<script defer src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
 <script defer src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.42/bundled/lenis.min.js"></script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-
-<!-- EmailJS — defer, init wartet in DOMContentLoaded weiter unten -->
 <script defer src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
   :root {
@@ -1818,9 +1809,7 @@
     width: 100%;
   }
  
-  /* ============================================== */
   /* ====== ANDROID CHROME — mix-blend-mode is broken with fixed + WebGL ====== */
-  /* Detect Android via @supports trick: only Chrome on Android lacks -webkit-touch-callout */
   html.is-android nav.top {
     mix-blend-mode: normal;
     background: linear-gradient(180deg, rgba(8,6,10,0.65) 0%, rgba(8,6,10,0) 100%);
@@ -1832,8 +1821,91 @@
     color: var(--ink);
   }
   html.is-android .hero-edge {
-    /* Edge labels also use difference indirectly via parent — force solid */
     color: rgba(244,239,230,0.7);
+  }
+
+  /* ====== ANDROID: backdrop-filter is unreliable, replace with solid bg ====== */
+  /* Cookie pill — was showing as harsh opaque black box on Android (Bild 6) */
+  html.is-android .cookie-pill {
+    background: rgba(8, 6, 10, 0.95);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  /* Credentials cert cards — backdrop-filter over WebGL caused rainbow moiré (Bild 9) */
+  html.is-android .cert-face {
+    background: rgba(20, 12, 14, 0.92);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  /* Drawer + drawer overlay — similar issue */
+  html.is-android .drawer {
+    background: rgba(8, 6, 10, 0.96);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  html.is-android .drawer-overlay {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  /* Sound toggle + quote-block + work-live-badge: same treatment */
+  html.is-android .sound-toggle {
+    background: rgba(8, 6, 10, 0.85);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  html.is-android .quote-block {
+    background: rgba(20, 12, 12, 0.85);
+    backdrop-filter: none;
+  }
+  html.is-android .work-live-badge {
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  /* Video modal backdrop */
+  html.is-android .video-modal-backdrop {
+    background: rgba(8, 6, 8, 0.95);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  /* Cert-card hover state — soften the border so it's still visible */
+  html.is-android .cert-front,
+  html.is-android .cert-back {
+    background: rgba(20, 12, 14, 0.88);
+  }
+
+  /* ====== ORIGIN section: fix pillar text overlap on narrow Android screens ====== */
+  /* The problem: .pillar p had max-width: 200px which on a 360px viewport 
+     split into 2 grid columns (~140px each) caused overflow & overlap. */
+  @media (max-width: 768px) {
+    .origin-right {
+      gap: 28px 20px;  /* more horizontal gap between pillar columns */
+    }
+    .pillar {
+      min-width: 0;  /* allow grid item to shrink below content size */
+      overflow: hidden;
+    }
+    .pillar p {
+      max-width: none;  /* let grid decide width */
+      font-size: 11px;
+      line-height: 1.45;
+      hyphens: manual;  /* no aggressive auto-hyphenation that overflows */
+      -webkit-hyphens: manual;
+      word-break: normal;
+      overflow-wrap: break-word;
+    }
+    .pillar h4 {
+      font-size: 10px;
+      letter-spacing: .18em;
+    }
+  }
+  /* Very narrow phones: stack pillars single-column */
+  @media (max-width: 400px) {
+    .origin-right {
+      grid-template-columns: 1fr !important;
+      gap: 22px;
+    }
+    .pillar p { font-size: 12px; max-width: 280px; }
   }
 
   /* ============================================== */
