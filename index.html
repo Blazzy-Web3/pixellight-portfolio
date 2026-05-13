@@ -2954,20 +2954,23 @@
 </div>
  
 <script>
-// Wait for all defer'd scripts (Three.js, GSAP, Lenis, EmailJS) to finish loading.
-// Then init EmailJS, then run all our app code.
+// CRITICAL: Wait for all defer'd scripts to finish before running app code.
+// On Android Chrome the timing race here was causing WebGL canvases (portrait, 
+// credentials wave, gate) to silently fail-init when THREE wasn't loaded yet.
 document.addEventListener('DOMContentLoaded', function() {
-  // Init EmailJS first (was previously a separate inline block)
+  // Init EmailJS first (was previously a separate inline block in head)
   if (typeof emailjs !== 'undefined') {
-    emailjs.init({ publicKey: "j69hxsdkRV0ZhF5d3" });
+    try { emailjs.init({ publicKey: "j69hxsdkRV0ZhF5d3" }); } catch(e) { console.warn('EmailJS init failed:', e); }
   }
 
 /* ============== TOUCH & ANDROID DETECTION ============== */
 const isTouch = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
 const isAndroid = /Android/i.test(navigator.userAgent);
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+document.documentElement.classList.toggle('is-touch', isTouch);
 document.documentElement.classList.toggle('is-android', isAndroid);
 
-// Optional: set a CSS variable for fallback viewport height
+/* CSS variable fallback for older browsers without 100svh */
 (function setVH() {
   const vh = window.innerHeight * 0.01;
   document.documentElement.style.setProperty('--vh', vh + 'px');
@@ -2978,8 +2981,6 @@ window.addEventListener('orientationchange', () => {
     document.documentElement.style.setProperty('--vh', vh + 'px');
   }, 100);
 });
-const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-document.documentElement.classList.toggle('is-touch', isTouch);
  
 /* ============== WEB AUDIO API: SYNTHESIZED SOUND DESIGN ============== */
 const SoundManager = (function() {
