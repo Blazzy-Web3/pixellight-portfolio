@@ -364,8 +364,7 @@
     width: 100%;
   }
   .about-img,
-  #portrait-canvas,
-  .portrait-fallback {
+  #portrait-canvas {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -375,7 +374,6 @@
     border-radius: 2px;
     filter: contrast(1.05) drop-shadow(0 30px 60px rgba(0,0,0,0.55));
   }
-  .portrait-fallback { display: none; }
   #portrait-canvas {
     cursor: none;
   }
@@ -2337,325 +2335,6 @@
     box-shadow: 0 0 30px rgba(255,61,31,0.5);
   }
 
-/* ============================================================
-   PIXEL LIGHT — ANDROID FALLBACK CSS
-   ------------------------------------------------------------
-   These styles activate ONLY when WebGL fails or is disabled
-   ============================================================ */
-
-/* =========================================
-   HERO FALLBACK
-   ========================================= */
-.hero.webgl-failed #hero-canvas { 
-  display: none; 
-}
-.hero.webgl-failed {
-  background: 
-    radial-gradient(ellipse at 50% 20%, rgba(255,61,31,0.22) 0%, transparent 45%),
-    radial-gradient(ellipse at 50% 100%, #2a0805 0%, #0c0608 35%, var(--bg) 70%),
-    var(--bg);
-}
-/* Render the brand wordmark via CSS as fallback "PIXEL LIGHT" */
-.hero.webgl-failed::after {
-  content: 'PIXEL LIGHT';
-  position: absolute;
-  top: 38%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-family: var(--display);
-  font-weight: 500;
-  font-size: clamp(56px, 13vw, 200px);
-  letter-spacing: -.02em;
-  color: var(--ink);
-  opacity: 0.96;
-  text-align: center;
-  line-height: 0.9;
-  pointer-events: none;
-  z-index: 2;
-  text-shadow: 
-    0 0 40px rgba(255,61,31,0.35),
-    0 0 80px rgba(255,61,31,0.15);
-  animation: fallback-breathe 4s ease-in-out infinite;
-}
-@keyframes fallback-breathe {
-  0%, 100% { opacity: 0.85; text-shadow: 0 0 40px rgba(255,61,31,0.35); }
-  50%      { opacity: 1;    text-shadow: 0 0 80px rgba(255,61,31,0.55), 0 0 120px rgba(255,61,31,0.25); }
-}
-/* Stack PIXEL / LIGHT on mobile so the wordmark fits */
-@media (max-width: 768px) {
-  .hero.webgl-failed::after {
-    content: 'PIXEL\A LIGHT';
-    white-space: pre;
-    font-size: clamp(70px, 22vw, 140px);
-    line-height: 0.95;
-    top: 42%;
-  }
-}
-/* Decorative grain overlay specifically for fallback */
-.hero.webgl-failed::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.04) 1px, transparent 1px);
-  background-size: 24px 24px;
-  z-index: 1;
-  pointer-events: none;
-  opacity: 0.5;
-}
-
-/* =========================================
-   PORTRAIT FALLBACK
-   ========================================= */
-.about-image-wrapper.webgl-failed #portrait-canvas { 
-  display: none; 
-}
-.about-image-wrapper.webgl-failed .portrait-fallback {
-  display: block !important;
-  filter: contrast(1.05) saturate(1.05) drop-shadow(0 30px 60px rgba(0,0,0,0.55));
-}
-/* Decorative wireframe overlay to keep the premium feel */
-.about-image-wrapper.webgl-failed::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: 
-    linear-gradient(135deg, transparent 48%, rgba(255,61,31,0.18) 50%, transparent 52%),
-    linear-gradient(45deg, transparent 48%, rgba(255,61,31,0.10) 50%, transparent 52%);
-  pointer-events: none;
-  z-index: 3;
-  mix-blend-mode: screen;
-  opacity: 0.6;
-}
-/* Subtle scan-line effect on the fallback portrait */
-.about-image-wrapper.webgl-failed::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(
-    180deg,
-    transparent 0px,
-    transparent 2px,
-    rgba(255,61,31,0.03) 2px,
-    rgba(255,61,31,0.03) 3px
-  );
-  pointer-events: none;
-  z-index: 4;
-  border-radius: 2px;
-}
-
-/* =========================================
-   CREDENTIALS WAVE FALLBACK
-   ========================================= */
-.credentials.webgl-failed #credentials-canvas { 
-  display: none; 
-}
-.credentials.webgl-failed .wave-background {
-  background-image: 
-    radial-gradient(ellipse 80% 60% at 20% 80%, rgba(255,61,31,0.15) 0%, transparent 60%),
-    radial-gradient(ellipse 70% 50% at 80% 20%, rgba(255,61,31,0.10) 0%, transparent 55%),
-    radial-gradient(ellipse 60% 40% at 50% 50%, rgba(255,61,31,0.06) 0%, transparent 70%);
-  background-color: transparent;
-  animation: wave-fallback-shift 18s ease-in-out infinite;
-}
-@keyframes wave-fallback-shift {
-  0%, 100% { background-position: 0% 0%, 100% 0%, 50% 50%; }
-  50%      { background-position: 5% 10%, 95% -5%, 55% 45%; }
-}
-/* Topographic line pattern overlay */
-.credentials.webgl-failed .wave-background::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: 
-    repeating-linear-gradient(
-      135deg,
-      transparent 0px,
-      transparent 60px,
-      rgba(255,61,31,0.04) 60px,
-      rgba(255,61,31,0.04) 61px
-    ),
-    repeating-linear-gradient(
-      45deg,
-      transparent 0px,
-      transparent 80px,
-      rgba(255,61,31,0.03) 80px,
-      rgba(255,61,31,0.03) 81px
-    );
-  opacity: 0.7;
-}
-
-/* =========================================
-   GATE PORTAL FALLBACK
-   ========================================= */
-.gate-portal.webgl-failed #gate-canvas { 
-  display: none; 
-}
-.gate-portal.webgl-failed {
-  background: 
-    radial-gradient(circle at 50% 50%, 
-      #ff3d1f 0%, 
-      #1a0405 8%, 
-      #050203 35%,
-      transparent 70%);
-  border-radius: 50%;
-  position: relative;
-  animation: portal-fallback-pulse 3s ease-in-out infinite;
-}
-@keyframes portal-fallback-pulse {
-  0%, 100% { box-shadow: 0 0 60px rgba(255,61,31,0.4), inset 0 0 40px rgba(0,0,0,0.8); }
-  50%      { box-shadow: 0 0 120px rgba(255,61,31,0.7), inset 0 0 60px rgba(0,0,0,0.9); }
-}
-.gate-portal.webgl-failed::before {
-  content: '';
-  position: absolute;
-  top: 50%; left: 50%;
-  width: 30%; height: 30%;
-  transform: translate(-50%, -50%);
-  background: radial-gradient(circle, #050203 30%, transparent 70%);
-  border-radius: 50%;
-  z-index: 2;
-}
-.gate-portal.webgl-failed::after {
-  content: '';
-  position: absolute;
-  inset: 15%;
-  border: 1px solid rgba(255,61,31,0.3);
-  border-radius: 50%;
-  animation: portal-ring-spin 8s linear infinite;
-}
-@keyframes portal-ring-spin {
-  to { transform: rotate(360deg); }
-}
-
-/* =========================================
-   ARSENAL MOBILE 3D FALLBACK (Static icons)
-   ========================================= */
-html.low-gpu .arsenal-skill-card .skill-canvas {
-  display: flex !important;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, rgba(255,61,31,0.10), rgba(0,0,0,0.05));
-  border-radius: 12px;
-  position: relative;
-  overflow: hidden;
-}
-html.low-gpu .arsenal-skill-card .skill-canvas canvas {
-  display: none !important;
-}
-/* Static SVG-style icons for each kind */
-html.low-gpu .arsenal-skill-card .skill-canvas::before {
-  content: '';
-  display: block;
-  width: 32px;
-  height: 32px;
-  border: 1.5px solid #ff3d1f;
-  position: relative;
-  z-index: 1;
-}
-html.low-gpu .arsenal-skill-card[data-kind="codeCube"] .skill-canvas::before { 
-  transform: rotate(45deg); 
-  border-radius: 2px;
-  box-shadow: -8px 8px 0 -1.5px rgba(255,61,31,0.4);
-}
-html.low-gpu .arsenal-skill-card[data-kind="monolith"] .skill-canvas::before { 
-  width: 16px; 
-  height: 42px;
-  border-radius: 2px;
-}
-html.low-gpu .arsenal-skill-card[data-kind="wireSphere"] .skill-canvas::before { 
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
-}
-html.low-gpu .arsenal-skill-card[data-kind="prism"] .skill-canvas::before { 
-  transform: rotate(45deg);
-  width: 28px;
-  height: 28px;
-  border-radius: 0;
-}
-html.low-gpu .arsenal-skill-card[data-kind="wave"] .skill-canvas::before { 
-  border: none;
-  background: 
-    linear-gradient(transparent 30%, #ff3d1f 30%, #ff3d1f 35%, transparent 35%, transparent 60%, #ff3d1f 60%, #ff3d1f 65%, transparent 65%);
-  width: 40px;
-  height: 24px;
-}
-html.low-gpu .arsenal-skill-card[data-kind="helix"] .skill-canvas::before { 
-  border-radius: 50% 0 50% 0;
-  transform: rotate(45deg);
-  width: 30px;
-  height: 30px;
-}
-html.low-gpu .arsenal-skill-card[data-kind="network"] .skill-canvas::before { 
-  border-style: dashed;
-  border-radius: 50%;
-  width: 34px;
-  height: 34px;
-}
-/* Subtle accent line behind the icon */
-html.low-gpu .arsenal-skill-card .skill-canvas::after {
-  content: '';
-  position: absolute;
-  bottom: 8px; left: 12px; right: 12px;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255,61,31,0.4), transparent);
-  z-index: 0;
-}
-
-/* =========================================
-   IN-APP-BROWSER SPECIFIC TWEAKS
-   ========================================= */
-/* Hide custom cursor entirely on in-app browsers — they often misbehave */
-html.in-app-browser .cursor-dot,
-html.in-app-browser .cursor-ring {
-  display: none !important;
-}
-html.in-app-browser body,
-html.in-app-browser * {
-  cursor: auto !important;
-}
-/* Disable expensive blur backdrops on in-app browsers */
-html.in-app-browser .drawer,
-html.in-app-browser .video-modal-backdrop,
-html.in-app-browser .cookie-pill {
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-html.in-app-browser .drawer {
-  background: rgba(8, 6, 10, 0.96);
-}
-html.in-app-browser .video-modal-backdrop {
-  background: rgba(8, 6, 8, 0.96);
-}
-html.in-app-browser .cookie-pill {
-  background: rgba(8, 6, 10, 0.96);
-}
-/* Disable the hero text mix-blend-mode on in-app browsers — it inverts wrong */
-html.in-app-browser nav.top {
-  mix-blend-mode: normal;
-}
-html.in-app-browser nav.top .logo,
-html.in-app-browser nav.top .nav-links a {
-  color: var(--ink);
-}
-
-/* =========================================
-   COMPLETE NO-WEBGL FALLBACK
-   ========================================= */
-html.no-webgl .hero,
-html.no-webgl .about-image-wrapper,
-html.no-webgl .credentials,
-html.no-webgl .gate-portal {
-  /* All sections get their .webgl-failed treatment by default */
-}
-html.no-webgl #hero-canvas,
-html.no-webgl #portrait-canvas,
-html.no-webgl #credentials-canvas,
-html.no-webgl #gate-canvas,
-html.no-webgl .arsenal-skill-card canvas,
-html.no-webgl .acc-artifact canvas {
-  display: none !important;
-}
 </style>
 </head>
 <body>
@@ -2704,7 +2383,7 @@ html.no-webgl .acc-artifact canvas {
  
 <!-- HERO -->
 <section class="hero" id="hero">
-  <canvas id="hero-canvas"></canvas>
+  <canvas id="hero-canvas" role="img" aria-label="Animierte Glas-Partikel-Typografie der Worte PIXEL LIGHT mit roter Flüssigkeitsexplosion, reagiert auf Mausbewegung"></canvas>
   <div class="hero-edge tl ui-layer">
     <span class="ed-num">N° 01</span>Pixel Light — Digital Experiences
     <span class="ed-line"></span>
@@ -2736,8 +2415,7 @@ html.no-webgl .acc-artifact canvas {
       <div class="about-frame"></div>
       <div class="about-frame bottom"></div>
       <div class="about-glow"></div>
-      <canvas id="portrait-canvas"></canvas>
-      <img class="portrait-fallback" src="assets/portrait.jpg" alt="Damon Fieberg" loading="lazy">
+      <canvas id="portrait-canvas" aria-label="Portrait Damon Fieberg mit interaktivem Distortion-Effekt"></canvas>
     </div>
     <div class="about-text reveal" style="transition-delay: .15s;">
       <div class="label">/ Der Architekt</div>
@@ -3004,7 +2682,7 @@ html.no-webgl .acc-artifact canvas {
 <!-- CREDENTIALS -->
 <section class="credentials" id="mindscape">
   <div class="wave-background">
-    <canvas id="credentials-canvas"></canvas>
+    <canvas id="credentials-canvas" role="img" aria-label="Holografisches topografisches Höhenfeld als Hintergrund"></canvas>
   </div>
   <div class="label reveal">04 / Credentials</div>
   <div class="cert-grid">
@@ -3177,7 +2855,7 @@ html.no-webgl .acc-artifact canvas {
         <p class="sub reveal" style="transition-delay:.1s">Tritt ein.</p>
       </div>
       <div class="gate-portal" id="gatePortal" role="button" tabindex="0" aria-label="Portal aktivieren">
-        <canvas id="gate-canvas"></canvas>
+        <canvas id="gate-canvas" role="img" aria-label="Animiertes Gravitations-Portal mit Wirbel-Effekt beim Klick"></canvas>
         <div class="gate-plus">+</div>
       </div>
       <div class="gate-right">
@@ -3266,196 +2944,6 @@ html.no-webgl .acc-artifact canvas {
 </div>
  
 <script>
-/* ============================================================
-   PIXEL LIGHT — ANDROID HIGH-END FIX
-   ------------------------------------------------------------
-   What it does:
-   1. Detects In-App-Browsers (Instagram, TikTok, FB, etc.)
-   2. Detects low-end Android GPUs
-   3. Caps WebGL context count (Android max 8, in-app max 3-5)
-   4. Handles webglcontextlost gracefully with CSS fallbacks
-   5. Reduces particle counts, disables bloom on weak GPUs
-   ============================================================ */
-
-/* ============== DEVICE & ENVIRONMENT DETECTION ============== */
-window.ENV = (function detectEnvironment() {
-  const ua = navigator.userAgent || '';
-  
-  // In-App-Browser detection
-  const isInAppBrowser = /Instagram|FBAN|FBAV|FB_IAB|TikTok|musical_ly|Snapchat|LinkedInApp|Twitter|Line\/|MicroMessenger|WeiBo|GSA\/|KAKAOTALK/i.test(ua);
-  
-  const isAndroid = /Android/i.test(ua);
-  const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
-  
-  // GPU tier detection
-  let gpuTier = 'high'; // high | mid | low | none
-  let webglAvailable = true;
-  let maxContexts = 8;
-  let rendererString = '';
-  
-  try {
-    const testCanvas = document.createElement('canvas');
-    const gl = testCanvas.getContext('webgl', { failIfMajorPerformanceCaveat: false }) 
-            || testCanvas.getContext('experimental-webgl');
-    if (!gl) {
-      webglAvailable = false;
-      gpuTier = 'none';
-    } else {
-      const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
-      rendererString = debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) : '';
-      const r = rendererString.toLowerCase();
-      
-      // Low-end mobile GPUs
-      if (/mali-?[g]?[1-4]\d[^\d]|adreno [3-5]\d\d|powervr sgx|powervr ge[0-7]\d\d/i.test(r)) {
-        gpuTier = 'low';
-      } 
-      // Mid-tier
-      else if (/mali-?[g]?[5-7]\d[^\d]|adreno [6][0-3]\d|apple a[789]/i.test(r)) {
-        gpuTier = 'mid';
-      }
-      
-      // Free the test context
-      const loseExt = gl.getExtension('WEBGL_lose_context');
-      if (loseExt) loseExt.loseContext();
-    }
-  } catch(e) {
-    webglAvailable = false;
-    gpuTier = 'none';
-  }
-  
-  // In-app browsers: force aggressive limits
-  if (isInAppBrowser) {
-    if (gpuTier === 'high') gpuTier = 'mid';
-    if (gpuTier === 'mid') gpuTier = 'low';
-    maxContexts = 3;
-  } else if (isAndroid) {
-    if (gpuTier === 'low') maxContexts = 4;
-    else if (gpuTier === 'mid') maxContexts = 6;
-    else maxContexts = 7; // leave headroom on Android even for high-tier
-  }
-  
-  // Memory check
-  const lowMemory = navigator.deviceMemory && navigator.deviceMemory <= 4;
-  if (lowMemory && gpuTier === 'high') gpuTier = 'mid';
-  if (lowMemory && gpuTier === 'mid') gpuTier = 'low';
-  
-  // CPU cores hint
-  const lowCPU = navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4;
-  
-  const flags = {
-    isAndroid,
-    isIOS,
-    isInAppBrowser,
-    gpuTier,
-    webglAvailable,
-    maxContexts,
-    lowMemory: !!lowMemory,
-    lowCPU: !!lowCPU,
-    rendererString,
-    disableHeavyWebGL: isInAppBrowser || gpuTier === 'low',
-    pixelRatioCap: gpuTier === 'low' ? 1 : (gpuTier === 'mid' ? 1.5 : 2),
-    disableBloom: isInAppBrowser || gpuTier !== 'high',
-    disableArsenalMobile3D: isInAppBrowser || gpuTier === 'low',
-    disableCredentialsWave: isInAppBrowser || gpuTier === 'low',
-    disablePortraitShader: isInAppBrowser || gpuTier === 'low',
-    disableGatePortal: isInAppBrowser,
-    particleCountMultiplier: gpuTier === 'low' ? 0.35 : (gpuTier === 'mid' ? 0.65 : 1),
-  };
-  
-  document.documentElement.dataset.gpu = gpuTier;
-  document.documentElement.classList.toggle('in-app-browser', isInAppBrowser);
-  document.documentElement.classList.toggle('low-gpu', gpuTier === 'low' || isInAppBrowser);
-  document.documentElement.classList.toggle('mid-gpu', gpuTier === 'mid');
-  document.documentElement.classList.toggle('no-webgl', !webglAvailable);
-  
-  console.log('[PIXEL LIGHT]', flags);
-  return flags;
-})();
-
-/* ============== WEBGL CONTEXT BUDGET MANAGER ============== */
-window.ContextManager = {
-  active: 0,
-  consumers: new Map(), // canvas → release fn
-  request(name) {
-    if (this.active >= ENV.maxContexts) {
-      console.warn('[ContextManager] BUDGET EXHAUSTED, denied:', name, this.active, '/', ENV.maxContexts);
-      return false;
-    }
-    this.active++;
-    console.log('[ContextManager] grant', name, this.active, '/', ENV.maxContexts);
-    return true;
-  },
-  release(name) {
-    this.active = Math.max(0, this.active - 1);
-    console.log('[ContextManager] release', name, this.active, '/', ENV.maxContexts);
-  }
-};
-
-/* ============== IN-APP-BROWSER NUDGE ============== */
-if (ENV.isInAppBrowser) {
-  document.addEventListener('DOMContentLoaded', () => {
-    const hint = document.createElement('div');
-    hint.id = 'iab-nudge';
-    hint.style.cssText = `
-      position: fixed; top: 70px; left: 20px; right: 20px;
-      background: rgba(8,6,10,0.92); color: #f4efe6; 
-      padding: 12px 18px; border-radius: 100px; 
-      font-family: 'JetBrains Mono', monospace; font-size: 10px; 
-      letter-spacing: .15em; text-align: center;
-      border: 1px solid #ff3d1f; z-index: 9999;
-      box-shadow: 0 0 30px rgba(255,61,31,0.35);
-      transform: translateY(-100px); opacity: 0;
-      transition: transform .8s cubic-bezier(.2,.9,.3,1), opacity .5s;
-      display: flex; align-items: center; justify-content: space-between; gap: 10px;
-    `;
-    hint.innerHTML = `
-      <span style="flex:1; text-align:left;">FÜR BESTE EXPERIENCE<br><strong style="color:#ff3d1f;">IM BROWSER ÖFFNEN ↗</strong></span>
-      <button style="background:transparent;border:1px solid rgba(244,239,230,.3);color:#f4efe6;border-radius:50%;width:24px;height:24px;cursor:pointer;font-size:11px;">✕</button>
-    `;
-    document.body.appendChild(hint);
-    requestAnimationFrame(() => {
-      hint.style.transform = 'translateY(0)';
-      hint.style.opacity = '1';
-    });
-    hint.querySelector('button').addEventListener('click', (e) => {
-      e.stopPropagation();
-      hint.style.opacity = '0';
-      hint.style.transform = 'translateY(-100px)';
-      setTimeout(() => hint.remove(), 600);
-    });
-    // Auto-fade after 12s
-    setTimeout(() => { if (hint.parentNode) hint.style.opacity = '0.4'; }, 12000);
-  });
-}
-
-/* ============== UNIVERSAL CONTEXT-LOSS HANDLER ============== */
-/* Attach to any canvas — automatically marks its section .webgl-failed
-   so CSS fallbacks kick in. Returns a function to register cleanup. */
-window.attachContextLossHandler = function(canvas, sectionEl, name) {
-  let destroyed = false;
-  canvas.addEventListener('webglcontextlost', (e) => {
-    e.preventDefault();
-    if (destroyed) return;
-    destroyed = true;
-    console.warn('[WebGL] context lost:', name);
-    if (sectionEl) sectionEl.classList.add('webgl-failed');
-    ContextManager.release(name);
-  });
-  canvas.addEventListener('webglcontextrestored', () => {
-    console.log('[WebGL] context restored:', name);
-    // Optional: reload to re-init cleanly. Too aggressive for most cases.
-  });
-  return {
-    isDestroyed: () => destroyed,
-    destroy: () => {
-      if (destroyed) return;
-      destroyed = true;
-      if (sectionEl) sectionEl.classList.add('webgl-failed');
-      ContextManager.release(name);
-    }
-  };
-};
-
 /* ============== TOUCH DETECTION ============== */
 const isTouch = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
 const isAndroid = /Android/i.test(navigator.userAgent);
@@ -3474,18 +2962,6 @@ window.addEventListener('orientationchange', () => {
 });
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 document.documentElement.classList.toggle('is-touch', isTouch);
-
-/* Auto-hide any canvas whose WebGL context is lost (Android GPU limit) */
-window.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('canvas').forEach(c => {
-    c.addEventListener('webglcontextlost', e => {
-      e.preventDefault();
-      c.style.display = 'none';
-      const fb = c.parentElement && c.parentElement.querySelector('.portrait-fallback');
-      if (fb) fb.style.display = 'block';
-    });
-  });
-});
  
 /* ============== WEB AUDIO API: SYNTHESIZED SOUND DESIGN ============== */
 const SoundManager = (function() {
@@ -4000,43 +3476,14 @@ if (contactForm) {
    spawn 3D points (glass-like) at sampled positions, animate splash. */
 function initHeroScene() {
   const canvas = document.getElementById('hero-canvas');
-  const heroSection = document.getElementById('hero');
-  
-  // Bail out if no WebGL or budget exhausted
-  if (!ENV.webglAvailable) {
-    heroSection.classList.add('webgl-failed');
-    return;
-  }
-  if (!ContextManager.request('hero')) {
-    heroSection.classList.add('webgl-failed');
-    return;
-  }
-  
-  // Attach context-loss handler
-  const lossHandler = attachContextLossHandler(canvas, heroSection, 'hero');
-  
-  let renderer;
-  try {
-    renderer = new THREE.WebGLRenderer({ 
-      canvas, 
-      alpha: true, 
-      antialias: ENV.gpuTier === 'high',
-      powerPreference: 'high-performance',
-      failIfMajorPerformanceCaveat: false,
-      preserveDrawingBuffer: false
-    });
-  } catch(e) {
-    console.warn('[Hero] WebGLRenderer init failed', e);
-    lossHandler.destroy();
-    return;
-  }
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
   renderer.setClearColor(0x000000, 0);
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
   camera.position.z = 14;
  
   // Bloom composer (graceful fallback if scripts didn't load)
-  const useBloom = typeof THREE.EffectComposer !== 'undefined' && !ENV.disableBloom;
+  const useBloom = typeof THREE.EffectComposer !== 'undefined' && !isTouch;
   let composer = null;
   if (useBloom) {
     composer = new THREE.EffectComposer(renderer);
@@ -4051,7 +3498,7 @@ function initHeroScene() {
     const w = canvas.clientWidth;
     const h = canvas.clientHeight;
     renderer.setSize(w, h, false);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, ENV.pixelRatioCap));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, heroIsMobile ? 1.5 : 2));
     if (composer) composer.setSize(w, h);
     camera.aspect = w / h;
     // Responsive camera: on narrow screens push the type UPWARD by lowering camera Y
@@ -4097,8 +3544,7 @@ function initHeroScene() {
   const img = tctx.getImageData(0, 0, cWidth, cHeight).data;
  
   const positions = [];
-  // Adaptive density: low-tier GPU = larger step = fewer particles
-  const step = ENV.gpuTier === 'low' ? 9 : (ENV.gpuTier === 'mid' ? 7 : 5);
+  const step = 5;
   for (let y = 0; y < cHeight; y += step) {
     for (let x = 0; x < cWidth; x += step) {
       const a = img[(y * cWidth + x) * 4 + 3];
@@ -4252,7 +3698,6 @@ const splash = new THREE.Points(splashGeom, splashMat);
  
   const clock = new THREE.Clock();
   function animate() {
-    if (lossHandler.isDestroyed()) return; // CRITICAL: stop loop if context lost
     const rec = animRegistry.get(canvas);
     if (rec && !rec.active) { requestAnimationFrame(animate); return; }
     const t = clock.getElapsedTime();
@@ -4347,32 +3792,8 @@ if (/Android/i.test(navigator.userAgent)) {
 (function portraitDistortion() {
   const canvas = document.getElementById('portrait-canvas');
   if (!canvas) return;
-  const wrapper = canvas.closest('.about-image-wrapper');
-  
-  // Skip shader entirely on weak GPUs — fallback img + CSS wireframe takes over
-  if (ENV.disablePortraitShader) {
-    wrapper.classList.add('webgl-failed');
-    return;
-  }
-  if (!ContextManager.request('portrait')) {
-    wrapper.classList.add('webgl-failed');
-    return;
-  }
-  
-  const lossHandler = attachContextLossHandler(canvas, wrapper, 'portrait');
  
-  let renderer;
-  try {
-    renderer = new THREE.WebGLRenderer({ 
-      canvas, alpha: true, 
-      antialias: ENV.gpuTier === 'high',
-      powerPreference: 'high-performance',
-      failIfMajorPerformanceCaveat: false
-    });
-  } catch(e) {
-    lossHandler.destroy();
-    return;
-  }
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
   renderer.setClearColor(0x000000, 0);
   const scene = new THREE.Scene();
   // Plane fills the entire ortho frustum (-1..1)
@@ -4505,7 +3926,6 @@ if (/Android/i.test(navigator.userAgent)) {
  
   const clock = new THREE.Clock();
   function animate() {
-    if (lossHandler.isDestroyed()) return;
     const rec = animRegistry.get(canvas);
     if (rec && !rec.active) { requestAnimationFrame(animate); return; }
     const t = clock.getElapsedTime();
@@ -4544,30 +3964,8 @@ if (/Android/i.test(navigator.userAgent)) {
 (function credentialsScene() {
   const canvas = document.getElementById('credentials-canvas');
   if (!canvas) return;
-  const section = canvas.closest('.credentials');
-  
-  if (ENV.disableCredentialsWave) {
-    section.classList.add('webgl-failed');
-    return;
-  }
-  if (!ContextManager.request('credentials')) {
-    section.classList.add('webgl-failed');
-    return;
-  }
-  
-  const lossHandler = attachContextLossHandler(canvas, section, 'credentials');
-  
-  let renderer;
-  try {
-    renderer = new THREE.WebGLRenderer({ 
-      canvas, alpha: true, 
-      antialias: ENV.gpuTier === 'high',
-      powerPreference: 'high-performance'
-    });
-  } catch(e) {
-    lossHandler.destroy();
-    return;
-  }
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  renderer.setClearColor(0x000000, 0);
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
   camera.position.set(0, 5.5, 14);
@@ -4596,7 +3994,7 @@ if (/Android/i.test(navigator.userAgent)) {
  
   // Wider plane to fill the full viewport
   const size = 26;
-  const segments = ENV.gpuTier === 'low' ? 30 : (ENV.gpuTier === 'mid' ? 50 : 80);
+  const segments = isTouch ? 50 : 80;
   const geom = new THREE.PlaneGeometry(size, size, segments, segments);
   geom.rotateX(-Math.PI / 2);
  
@@ -4667,7 +4065,6 @@ if (/Android/i.test(navigator.userAgent)) {
  
   const clock = new THREE.Clock();
   function animate() {
-    if (lossHandler.isDestroyed()) return;
     const rec = animRegistry.get(canvas);
     if (rec && !rec.active) { requestAnimationFrame(animate); return; }
     const t = clock.getElapsedTime();
@@ -4691,40 +4088,14 @@ if (/Android/i.test(navigator.userAgent)) {
   const portal = document.getElementById('gatePortal');
   const gateSection = document.getElementById('gate');
   
-  if (ENV.disableGatePortal) {
-    portal.classList.add('webgl-failed');
-    // Still wire up the click → scroll to contact
-    portal.addEventListener('click', () => {
-      document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
-    return;
-  }
-  if (!ContextManager.request('gate')) {
-    portal.classList.add('webgl-failed');
-    portal.addEventListener('click', () => {
-      document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
-    return;
-  }
-  
-  const lossHandler = attachContextLossHandler(canvas, portal, 'gate');
-  
-  let renderer;
-  try {
-    renderer = new THREE.WebGLRenderer({ 
-      canvas, alpha: true, 
-      antialias: ENV.gpuTier === 'high'
-    });
-  } catch(e) {
-    lossHandler.destroy();
-    return;
-  }
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  renderer.setClearColor(0x000000, 0); // Transparent background
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
   camera.position.z = 18;
 
   // Particle System
-  const N = Math.floor(5000 * ENV.particleCountMultiplier);
+  const N = 5000;
   const positions = new Float32Array(N * 3);
   const colors = new Float32Array(N * 3);
   const params = [];
@@ -4848,7 +4219,6 @@ if (/Android/i.test(navigator.userAgent)) {
   });
 
   function draw() {
-    if (lossHandler.isDestroyed()) return;
     const rec = animRegistry.get(canvas);
     if (rec && !rec.active) { requestAnimationFrame(draw); return; }
     
@@ -5026,87 +4396,54 @@ if (isPhoneLayout) {
   // === Mobile: tiny per-card Three.js scenes, with stagger reveal + velocity spin ===
   (function arsenalMobile() {
     const cards = document.querySelectorAll('.arsenal-skill-card');
-    
-    // Stagger reveal observer (same as before)
+ 
+    // Stagger reveal — first time a card enters the viewport, it animates in.
+    // Cards already on screen reveal in order with index-based delay.
     const cardObserver = new IntersectionObserver((entries) => {
       entries.forEach(en => {
         if (en.isIntersecting && !en.target.classList.contains('in')) {
           const idx = parseInt(en.target.dataset.idx, 10) || 0;
-          const delay = Math.min(idx, 5) * 80;
+          const delay = Math.min(idx, 5) * 80; // cap at 5 to avoid long waits
           setTimeout(() => en.target.classList.add('in'), delay);
           cardObserver.unobserve(en.target);
         }
       });
     }, { threshold: 0.2 });
-    
-    // Common: idx, observer, click → drawer
+ 
     cards.forEach((card, idx) => {
       card.dataset.idx = idx;
       cardObserver.observe(card);
-      card.addEventListener('click', () => openDrawer(card.dataset.skill));
-    });
-    
-    // EARLY EXIT: low-end Android / in-app browser → CSS icons only, NO Three.js
-    if (ENV.disableArsenalMobile3D) {
-      console.log('[Arsenal] 3D disabled, using CSS fallback icons');
-      return;
-    }
-    
-    // Three.js path — only on capable devices, with strict context budget
-    cards.forEach((card, idx) => {
-      // Stop creating contexts if budget exhausted
-      if (!ContextManager.request('arsenal-' + idx)) {
-        console.log('[Arsenal] Budget exhausted at card', idx, '— remaining use CSS fallback');
-        // Add low-gpu class to remaining cards to trigger CSS fallback
-        for (let i = idx; i < cards.length; i++) {
-          cards[i].classList.add('webgl-failed');
-        }
-        return;
-      }
       
+      // Open drawer on mobile tap
+      card.addEventListener('click', () => {
+        openDrawer(card.dataset.skill);
+      });
+ 
       const kind = card.dataset.kind;
       const accent = parseInt(card.dataset.accent.replace('#', '0x'));
       const host = card.querySelector('.skill-canvas');
       const cv = document.createElement('canvas');
       host.appendChild(cv);
-      
-      const lossHandler = attachContextLossHandler(cv, card, 'arsenal-' + idx);
-      if (lossHandler.isDestroyed()) {
-        card.classList.add('webgl-failed');
-        return;
-      }
-      
-      let renderer;
-      try {
-        renderer = new THREE.WebGLRenderer({ 
-          canvas: cv, alpha: true, 
-          antialias: false, // Always off on mobile arsenal — too many contexts
-          powerPreference: 'low-power' // Hint: don't wake the dedicated GPU
-        });
-      } catch(e) {
-        card.classList.add('webgl-failed');
-        lossHandler.destroy();
-        return;
-      }
+ 
+      const renderer = new THREE.WebGLRenderer({ canvas: cv, alpha: true, antialias: true });
       renderer.setClearColor(0x000000, 0);
-      
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
       camera.position.z = 4;
-      
       function resize() {
         const r = host.getBoundingClientRect();
         renderer.setSize(r.width, r.height, false);
-        renderer.setPixelRatio(1);
+        renderer.setPixelRatio(1); // Force 1x pixel ratio on mobile for massive performance gain
         camera.aspect = r.width / r.height;
         camera.updateProjectionMatrix();
       }
       resize(); onResize(resize);
-      
-      // Build artifact (same kind logic as original — copy from your existing code)
+ 
+      // Build a small artifact appropriate for the card
       const group = new THREE.Group();
+      // Per-card baseline spin (multiplied at runtime by velocity factor)
       let baseSpinY = 0, baseSpinX = 0;
-      
+ 
       if (kind === 'codeCube') {
         for (let i = 0; i < 2; i++) {
           const s = 0.9 + i * 0.5;
@@ -5147,7 +4484,7 @@ if (isPhoneLayout) {
           ring.userData.basePhase = i * 0.6;
           group.add(ring);
         }
-      } else if (kind === 'prism') {
+            } else if (kind === 'prism') {
         const g = new THREE.OctahedronGeometry(0.7, 0);
         group.add(new THREE.Mesh(g, new THREE.MeshBasicMaterial({ color: accent, transparent: true, opacity: 0.8, wireframe: true })));
         const innerG = new THREE.OctahedronGeometry(0.35, 0);
@@ -5162,7 +4499,7 @@ if (isPhoneLayout) {
         group.add(l);
         baseSpinY = 0.01;
         baseSpinX = 0.01;
-      } else if (kind === 'helix') {
+} else if (kind === 'helix') {
         const turns = 3, segs = 120, pts1 = [], pts2 = [];
         for (let i = 0; i <= segs; i++) {
           const tt = i / segs, a = tt * Math.PI * 2 * turns, y = (tt - 0.5) * 1.6;
@@ -5176,33 +4513,45 @@ if (isPhoneLayout) {
         baseSpinY = 0.014;
       }
       scene.add(group);
-      
+ 
       const clock = new THREE.Clock();
       function animate() {
-        if (lossHandler.isDestroyed()) return;
         const rec = animRegistry.get(cv);
         if (rec && !rec.active) { requestAnimationFrame(animate); return; }
         const t = clock.getElapsedTime();
+ 
+        // Velocity factor: 1 at rest, scales up with absolute scroll speed.
+        // Capped so violent flicks don't make it nauseating.
         const vAbs = Math.min(60, Math.abs(scrollVel.smooth));
-        const velFactor = 1 + vAbs * 0.18;
+        const velFactor = 1 + vAbs * 0.18;          // up to ~11x at full flick
+        // Direction sign — scroll down = positive, scroll up = negative
         const velSign = Math.sign(scrollVel.smooth) || 1;
+ 
+        // Apply to base spin
         if (baseSpinY) group.rotation.y += baseSpinY * velFactor * velSign;
         if (baseSpinX) group.rotation.x += baseSpinX * velFactor;
+ 
+        // Per-child spinning artifacts (codeCube)
         group.children.forEach(c => {
           if (c.userData.spin) {
             c.rotation.x += c.userData.spin.x * velFactor;
             c.rotation.y += c.userData.spin.y * velFactor * velSign;
           }
           if (c.userData.basePhase !== undefined) {
+            // Wave rings: pulse speed responds to velocity
             const speed = 2 + vAbs * 0.06;
             const s = 1 + Math.sin(t * speed + c.userData.basePhase) * 0.08;
             c.scale.set(s, s, 1);
           }
         });
+ 
         renderer.render(scene, camera);
         requestAnimationFrame(animate);
       }
+      
+      // Pre-compile shaders to prevent massive framedrops on mobile scroll
       renderer.compile(scene, camera);
+      
       registerAnim(cv, animate);
       animObserver.observe(cv);
       animate();
