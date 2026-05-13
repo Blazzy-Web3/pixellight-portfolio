@@ -2441,6 +2441,308 @@
     transform: scale(1.15);
     box-shadow: 0 0 30px rgba(255,61,31,0.5);
   }
+
+/* ==================================================
+   ANDROID PERFORMANCE MODE — ARSENAL ICONS
+   No WebGL. No canvas. Pure CSS premium artifacts.
+================================================== */
+
+@media (max-width: 768px) {
+  html.is-android .arsenal {
+    background:
+      radial-gradient(circle at 12% 0%, rgba(255,61,31,.08), transparent 38%),
+      linear-gradient(180deg, #f1ece2 0%, #e9e1d1 100%) !important;
+    color: #0a0808;
+    min-height: auto;
+  }
+
+  html.is-android .arsenal-mobile-stack {
+    gap: 26px;
+    padding: 0 22px 24px;
+  }
+
+  html.is-android .arsenal-skill-card {
+    min-height: 132px;
+    padding: 24px 22px;
+    border-radius: 20px;
+    background:
+      linear-gradient(135deg, rgba(255,255,255,.44), rgba(255,255,255,.12)),
+      rgba(241,236,226,.88);
+    border: 1px solid rgba(10,8,8,.12);
+    box-shadow:
+      0 18px 48px rgba(0,0,0,.08),
+      inset 0 1px 0 rgba(255,255,255,.62);
+    overflow: hidden;
+    transform: translate3d(0,0,0);
+    -webkit-transform: translate3d(0,0,0);
+  }
+
+  html.is-android .arsenal-skill-card::after {
+    content: '';
+    position: absolute;
+    inset: -40%;
+    background:
+      radial-gradient(circle at 0% 50%, rgba(255,61,31,.15), transparent 32%),
+      linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent);
+    opacity: .38;
+    pointer-events: none;
+  }
+
+  html.is-android .arsenal-skill-card .skill-canvas {
+    width: 74px;
+    height: 74px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 2;
+  }
+
+  html.is-android .arsenal-skill-card .skill-canvas canvas {
+    display: none !important;
+  }
+
+  html.is-android .android-skill-orb {
+    width: 52px;
+    height: 52px;
+    position: relative;
+    display: block;
+    transform: rotateX(58deg) rotateZ(-18deg);
+    animation: androidOrbFloat 5.5s ease-in-out infinite;
+  }
+
+  html.is-android .android-skill-orb::before,
+  html.is-android .android-skill-orb::after,
+  html.is-android .android-skill-orb .orb-line,
+  html.is-android .android-skill-orb .orb-core {
+    content: '';
+    position: absolute;
+    inset: 8px;
+    border: 1.5px solid var(--orb-accent);
+    border-radius: 4px;
+    box-shadow: 0 0 14px rgba(255,61,31,.28);
+  }
+
+  html.is-android .android-skill-orb::after {
+    transform: translate3d(8px, -8px, 0);
+    opacity: .42;
+  }
+
+  html.is-android .android-skill-orb .orb-line-a {
+    transform: rotate(45deg) scale(.72);
+    opacity: .58;
+  }
+
+  html.is-android .android-skill-orb .orb-line-b {
+    transform: rotate(-45deg) scale(.42);
+    opacity: .35;
+  }
+
+  html.is-android .android-skill-orb .orb-core {
+    inset: 21px;
+    background: var(--orb-accent);
+    border-radius: 50%;
+    opacity: .95;
+    box-shadow:
+      0 0 12px rgba(255,61,31,.65),
+      0 0 28px rgba(255,61,31,.24);
+  }
+
+  html.is-android .android-skill-orb[data-kind="monolith"] {
+    transform: rotateX(0) rotateZ(0);
+  }
+
+  html.is-android .android-skill-orb[data-kind="monolith"]::before {
+    inset: 6px 20px;
+    border-radius: 2px;
+    background: #0a0808;
+  }
+
+  html.is-android .android-skill-orb[data-kind="wireSphere"]::before,
+  html.is-android .android-skill-orb[data-kind="wireSphere"]::after {
+    border-radius: 50%;
+  }
+
+  html.is-android .android-skill-orb[data-kind="wave"]::before,
+  html.is-android .android-skill-orb[data-kind="wave"]::after {
+    border-radius: 50%;
+    border-left-color: transparent;
+    border-right-color: transparent;
+  }
+
+  html.is-android .android-skill-orb[data-kind="helix"]::before {
+    border-radius: 50%;
+    transform: rotate(65deg) scaleX(.42);
+  }
+
+  html.is-android .android-skill-orb[data-kind="network"]::before {
+    border-radius: 50%;
+    clip-path: polygon(50% 0%, 100% 36%, 82% 100%, 18% 100%, 0% 36%);
+  }
+
+  html.is-android .arsenal-skill-card .skill-meta,
+  html.is-android .arsenal-skill-card .skill-arrow {
+    position: relative;
+    z-index: 2;
+  }
+
+  html.is-android .arsenal-skill-card .skill-name {
+    font-size: clamp(30px, 8.5vw, 40px);
+    line-height: .96;
+    color: #0a0808;
+  }
+
+  html.is-android .arsenal-skill-card .skill-num {
+    font-size: 10px;
+    color: rgba(10,8,8,.55);
+  }
+
+  @keyframes androidOrbFloat {
+    0%, 100% {
+      transform: rotateX(58deg) rotateZ(-18deg) translateY(0);
+    }
+    50% {
+      transform: rotateX(58deg) rotateZ(-6deg) translateY(-5px);
+    }
+  }
+}
+
+/* ==================================================
+   ANDROID PERFORMANCE MODE — CERTIFICATE CARDS
+   Disable 3D flip. Use stable 2D reveal.
+================================================== */
+
+@media (max-width: 768px) {
+  html.is-android .credentials {
+    background:
+      radial-gradient(circle at 50% 0%, rgba(255,61,31,.16), transparent 42%),
+      linear-gradient(180deg, #0a0608 0%, #08060a 100%);
+    overflow: hidden;
+  }
+
+  html.is-android .wave-background {
+    display: none !important;
+  }
+
+  html.is-android .cert-grid {
+    perspective: none !important;
+    gap: 22px;
+  }
+
+  html.is-android .cert-card,
+  html.is-android .cert-card-inner,
+  html.is-android .cert-face {
+    aspect-ratio: auto !important;
+  }
+
+  html.is-android .cert-card {
+    min-height: 260px;
+    height: auto;
+    cursor: pointer;
+    transform: none !important;
+    -webkit-transform: none !important;
+  }
+
+  html.is-android .cert-card-inner {
+    position: relative !important;
+    inset: auto !important;
+    min-height: 260px;
+    height: auto;
+    transform: none !important;
+    -webkit-transform: none !important;
+    transform-style: flat !important;
+    -webkit-transform-style: flat !important;
+    transition: none !important;
+  }
+
+  html.is-android .cert-face {
+    position: relative !important;
+    inset: auto !important;
+    min-height: 260px;
+    transform: none !important;
+    -webkit-transform: none !important;
+    backface-visibility: visible !important;
+    -webkit-backface-visibility: visible !important;
+    border-radius: 18px;
+    background:
+      linear-gradient(135deg, rgba(255,255,255,.045), rgba(255,255,255,.015)),
+      rgba(20,12,14,.92) !important;
+    border: 1px solid rgba(255,255,255,.09);
+    box-shadow:
+      0 18px 54px rgba(0,0,0,.38),
+      inset 0 1px 0 rgba(255,255,255,.06);
+    overflow: hidden;
+  }
+
+  html.is-android .cert-front {
+    display: flex;
+    padding: 24px;
+  }
+
+  html.is-android .cert-back {
+    display: none;
+    margin-top: 12px;
+    padding: 0;
+    background: #08060a !important;
+  }
+
+  html.is-android .cert-card.flipped .cert-front {
+    display: none;
+  }
+
+  html.is-android .cert-card.flipped .cert-back {
+    display: block;
+  }
+
+  html.is-android .cert-img {
+    position: relative !important;
+    inset: auto !important;
+    width: 100%;
+    height: auto;
+    max-height: none;
+    aspect-ratio: auto;
+    object-fit: contain !important;
+    object-position: center;
+    display: block;
+    padding: 10px;
+    background: #0a0808;
+  }
+
+  html.is-android .cert-back::before {
+    display: none !important;
+  }
+
+  html.is-android .cert-back-meta {
+    position: relative !important;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    padding: 14px 18px 18px;
+    background: linear-gradient(180deg, rgba(8,6,10,.3), rgba(8,6,10,.96));
+    border-top: 1px solid rgba(255,255,255,.08);
+  }
+
+  html.is-android .cert-card .cert-title {
+    font-size: clamp(30px, 8vw, 40px);
+  }
+
+  html.is-android .cert-card .cert-icon {
+    width: 54px;
+    height: 54px;
+  }
+}
+
+html.is-android #portrait-canvas {
+  display: none !important;
+}
+
+html.is-android .portrait-fallback {
+  display: block !important;
+}
+
+html.is-android body::before {
+  display: none !important;
+}
 </style>
 </head>
 <body>
@@ -3559,7 +3861,7 @@ function initHeroScene() {
     const w = canvas.clientWidth;
     const h = canvas.clientHeight;
     renderer.setSize(w, h, false);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, heroIsMobile ? 1.5 : 2));
+    renderer.setPixelRatio(isAndroid ? 1 : Math.min(window.devicePixelRatio, heroIsMobile ? 1.5 : 2));
     if (composer) composer.setSize(w, h);
     camera.aspect = w / h;
     if (w < 480)      { heroFinalZ = 42; heroFinalY = -3.0; }
@@ -3602,7 +3904,7 @@ function initHeroScene() {
   const img = tctx.getImageData(0, 0, cWidth, cHeight).data;
  
   const positions = [];
-  const step = 5;
+  const step = isAndroid ? 7 : 5;
   for (let y = 0; y < cHeight; y += step) {
     for (let x = 0; x < cWidth; x += step) {
       const a = img[(y * cWidth + x) * 4 + 3];
@@ -3846,6 +4148,13 @@ if (isAndroid) {
   const canvas = document.getElementById('portrait-canvas');
   if (!canvas) return;
  
+  if (isAndroid) {
+    canvas.remove();
+    const fallback = document.querySelector('.portrait-fallback');
+    if (fallback) fallback.style.display = 'block';
+    return;
+  }
+ 
   // Lazy-init: defer WebGL context creation until section is near viewport.
   // On Android, holding 4+ contexts open simultaneously caused later canvases 
   // to fail with white-render. By staggering inits via scroll, we sidestep 
@@ -4015,14 +4324,52 @@ if (isAndroid) {
  
 /* ============== CREDENTIALS — FLIP CARDS ============== */
 (function certFlip() {
-  document.querySelectorAll('.cert-card').forEach(card => {
+  const cards = document.querySelectorAll('.cert-card');
+
+  cards.forEach(card => {
     card.setAttribute('tabindex', '0');
     card.setAttribute('role', 'button');
-    card.setAttribute('aria-label', 'Zertifikat umdrehen');
-    const toggle = () => card.classList.toggle('flipped');
+    card.setAttribute('aria-label', 'Zertifikat anzeigen');
+    card.setAttribute('aria-expanded', 'false');
+
+    const toggle = () => {
+      if (isAndroid) {
+        const wasOpen = card.classList.contains('flipped');
+
+        cards.forEach(c => {
+          c.classList.remove('flipped');
+          c.setAttribute('aria-expanded', 'false');
+        });
+
+        if (!wasOpen) {
+          card.classList.add('flipped');
+          card.setAttribute('aria-expanded', 'true');
+
+          setTimeout(() => {
+            card.scrollIntoView({
+              behavior: 'smooth',
+              block: 'center'
+            });
+          }, 80);
+        }
+
+        return;
+      }
+
+      card.classList.toggle('flipped');
+      card.setAttribute(
+        'aria-expanded',
+        card.classList.contains('flipped') ? 'true' : 'false'
+      );
+    };
+
     card.addEventListener('click', toggle);
+
     card.addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggle();
+      }
     });
   });
 })();
@@ -4031,6 +4378,11 @@ if (isAndroid) {
 (function credentialsScene() {
   const canvas = document.getElementById('credentials-canvas');
   if (!canvas) return;
+
+  if (isAndroid) {
+    canvas.remove();
+    return;
+  }
   
   // Lazy-init via IntersectionObserver (see portrait scene for rationale)
   let initialized = false;
@@ -4205,7 +4557,7 @@ if (isAndroid) {
   const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
   camera.position.z = 18;
 
-  const N = 5000;
+  const N = isAndroid ? 900 : 5000;
   const positions = new Float32Array(N * 3);
   const colors = new Float32Array(N * 3);
   const params = [];
@@ -4265,7 +4617,7 @@ if (isAndroid) {
   function resize() {
     const r = canvas.getBoundingClientRect();
     renderer.setSize(r.width, r.height, false);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(isAndroid ? 1 : Math.min(window.devicePixelRatio, 2));
     camera.aspect = r.width / r.height;
     camera.updateProjectionMatrix();
   }
@@ -4487,6 +4839,49 @@ if (isPhoneLayout) {
   (function arsenalMobile() {
     const cards = document.querySelectorAll('.arsenal-skill-card');
  
+    // ==================================================
+    // ANDROID PERFORMANCE MODE — NO WEBGL IN SKILL CARDS
+    // ==================================================
+    // Android/Samsung browsers are unstable with many small WebGL contexts.
+    // Use premium CSS artifacts instead of per-card Three.js renderers.
+    if (isAndroid) {
+      cards.forEach((card, idx) => {
+        card.dataset.idx = idx;
+
+        const host = card.querySelector('.skill-canvas');
+        const kind = card.dataset.kind || 'codeCube';
+        const accent = card.dataset.accent || '#ff3d1f';
+
+        if (host) {
+          host.innerHTML = '';
+
+          const icon = document.createElement('div');
+          icon.className = 'android-skill-orb';
+          icon.dataset.kind = kind;
+          icon.style.setProperty('--orb-accent', accent);
+
+          icon.innerHTML = `
+            <span class="orb-line orb-line-a"></span>
+            <span class="orb-line orb-line-b"></span>
+            <span class="orb-core"></span>
+          `;
+
+          host.appendChild(icon);
+        }
+
+        card.addEventListener('click', () => {
+          openDrawer(card.dataset.skill);
+        });
+
+        requestAnimationFrame(() => {
+          setTimeout(() => card.classList.add('in'), Math.min(idx, 5) * 80);
+        });
+      });
+
+      return;
+    }
+
+
     const cardObserver = new IntersectionObserver((entries) => {
       entries.forEach(en => {
         if (en.isIntersecting && !en.target.classList.contains('in')) {
@@ -4898,25 +5293,26 @@ window.addEventListener('scroll', () => {
 });
 
 /* ============== VIDEO MODAL ============== */
-window.addEventListener('DOMContentLoaded', () => {
+(function initVideoModal() {
   const modal = document.getElementById('videoModal');
   const backdrop = document.getElementById('videoModalClose');
   const closeBtn = document.getElementById('videoModalCloseBtn');
   const player = document.getElementById('modalVideoPlayer');
-  
-  if(!modal || !player) return;
+
+  if (!modal || !player) return;
 
   const cursorDot = document.querySelector('.cursor-dot');
   const cursorRing = document.querySelector('.cursor-ring');
 
   function hideCursor() {
-    if(cursorDot) cursorDot.style.display = 'none';
-    if(cursorRing) cursorRing.style.display = 'none';
+    if (cursorDot) cursorDot.style.display = 'none';
+    if (cursorRing) cursorRing.style.display = 'none';
     document.body.style.cursor = 'default';
   }
+
   function showCursor() {
-    if(cursorDot) cursorDot.style.display = '';
-    if(cursorRing) cursorRing.style.display = '';
+    if (cursorDot) cursorDot.style.display = '';
+    if (cursorRing) cursorRing.style.display = '';
     document.body.style.cursor = '';
   }
 
@@ -4924,6 +5320,7 @@ window.addEventListener('DOMContentLoaded', () => {
     modal.classList.remove('open');
     modal.setAttribute('aria-hidden', 'true');
     showCursor();
+
     setTimeout(() => {
       player.pause();
       player.removeAttribute('src');
@@ -4931,31 +5328,32 @@ window.addEventListener('DOMContentLoaded', () => {
     }, 400);
   }
 
-  backdrop.addEventListener('click', closeModal);
-  closeBtn.addEventListener('click', closeModal);
-  
-  document.addEventListener('keydown', (e) => {
-    if(e.key === 'Escape' && modal.classList.contains('open')) {
+  backdrop?.addEventListener('click', closeModal);
+  closeBtn?.addEventListener('click', closeModal);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && modal.classList.contains('open')) {
       closeModal();
     }
   });
 
-  document.body.addEventListener('click', (e) => {
+  document.body.addEventListener('click', e => {
     const card = e.target.closest('.work-card:not(.work-card--soon)');
-    if (card) {
-      if (card.getAttribute('target') === '_blank') return;
-      e.preventDefault();
-      const video = card.querySelector('video source');
-      if (video) {
-        player.src = video.src;
-        modal.classList.add('open');
-        modal.setAttribute('aria-hidden', 'false');
-        hideCursor();
-        player.play().catch(err => console.warn('Autoplay prevented:', err));
-      }
-    }
+    if (!card) return;
+    if (card.getAttribute('target') === '_blank') return;
+
+    e.preventDefault();
+
+    const video = card.querySelector('video source');
+    if (!video) return;
+
+    player.src = video.src;
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+    hideCursor();
+    player.play().catch(err => console.warn('Autoplay prevented:', err));
   });
-});
+})();
 
 /* ============== FRIEDA CANVAS ANIMATION ============== */
 (function() {
