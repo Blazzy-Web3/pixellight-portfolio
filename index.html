@@ -1810,6 +1810,10 @@
   html.is-android canvas.webgl-failed {
     display: none !important;
   }
+  /* Arsenal: linear-gradient fails to render on some Samsung GPUs → use solid */
+  html.is-android .arsenal {
+    background: #f1ece2 !important;
+  }
 
   /* ====== ANDROID: backdrop-filter is unreliable, replace with solid bg ====== */
   /* Cookie pill — was showing as harsh opaque black box on Android (Bild 6) */
@@ -4449,7 +4453,25 @@ if (isPhoneLayout) {
       const host = card.querySelector('.skill-canvas');
       const cv = document.createElement('canvas');
       host.appendChild(cv);
- 
+      
+      // CRITICAL: Per-card lazy WebGL init.
+      // Previously all 7 cards created a WebGL context in DOMContentLoaded → 
+      // Samsung Internet's context limit kicked in → cards 2+ silent-failed 
+      // and rendered as white broken-image boxes.
+      // Now: each card waits for its own viewport approach before creating 
+      // the renderer. Combined with the existing farObserver disposal, 
+      // we get a true lazy WebGL lifecycle.
+      let cardInited = false;
+      const cardLazyInit = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && !cardInited) {
+          cardInited = true;
+          cardLazyInit.disconnect();
+          doCardInit();
+        }
+      }, { rootMargin: '400px 0px 400px 0px' });
+      cardLazyInit.observe(card);
+      
+      function doCardInit() {
       let renderer;
       try {
         renderer = new THREE.WebGLRenderer({ 
@@ -4457,8 +4479,14 @@ if (isPhoneLayout) {
           failIfMajorPerformanceCaveat: false,
           powerPreference: 'high-performance'
         });
+        // Post-construct validation: on Android, the constructor sometimes 
+        // succeeds but returns an invalid context (silent fail). Verify here.
+        const glCtx = renderer.getContext();
+        if (!glCtx || glCtx.isContextLost()) {
+          throw new Error('WebGL context invalid after construction');
+        }
       } catch(e) {
-        console.warn('Arsenal card WebGL failed:', e);
+        console.warn('Arsenal card #' + idx + ' WebGL failed:', e);
         cv.classList.add('webgl-failed');
         return;
       }
@@ -4608,6 +4636,7 @@ if (isPhoneLayout) {
           card._disposeWebGL = null;
         } catch(e) { console.warn('Arsenal dispose error:', e); }
       };
+      } // end doCardInit
     });
     
     // Far-observer: dispose cards that are 2+ viewports away (memory saving on Android)
