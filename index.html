@@ -81,7 +81,6 @@
     z-index: 9999;
     mix-blend-mode: difference;
     will-change: transform;
-    /* No transition on transform — JS drives it directly each frame */
   }
   .cursor-dot {
     width: 6px; height: 6px;
@@ -117,14 +116,6 @@
     isolation: isolate;
     will-change: transform;
     transform: translateZ(0);
-  }
-  /* Android-specific: difference mode is unreliable, fall back to solid colors */
-  @supports (-webkit-touch-callout: none) {
-    /* iOS — keep difference */
-  }
-  @media not all and (-webkit-min-device-pixel-ratio: 0), 
-         not all and (min-resolution: .001dpcm) {
-    /* never matches — placeholder */
   }
   .logo {
     font-family: var(--display);
@@ -185,8 +176,6 @@
   /* === HERO === */
   .hero {
     position: relative;
-    /* Stable height priority: svh (no address-bar bouncing), 
-       fallback to vh, fallback to fixed 100% of initial viewport */
     height: 100vh;
     height: 100svh;
     min-height: 600px;
@@ -365,7 +354,8 @@
     width: 100%;
   }
   .about-img,
-  #portrait-canvas {
+  #portrait-canvas,
+  .portrait-fallback {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -375,6 +365,7 @@
     border-radius: 2px;
     filter: contrast(1.05) drop-shadow(0 30px 60px rgba(0,0,0,0.55));
   }
+  .portrait-fallback { display: none; }
   #portrait-canvas {
     cursor: none;
   }
@@ -449,7 +440,6 @@
     .about-text { margin: 0 auto; }
     .about-p { margin: 30px auto 0; }
     .signature { justify-content: center; }
-    /* Swap desktop corner-frames for a sleek single accent line on mobile */
     .about-frame { display: none; }
     .about-frame.bottom {
       display: block;
@@ -474,7 +464,7 @@
       border-radius: 6px;
     }
   }
- 
+
   /* === ARSENAL — CINEMATIC ACCORDION === */
   .arsenal {
     background: linear-gradient(180deg, #f1ece2 0%, #ebe4d4 100%);
@@ -821,9 +811,7 @@
     transition: transform .8s cubic-bezier(.2,.9,.3,1);
   }
   .work-card:hover .work-video { transform: scale(1.06); }
-  /* Card itself becomes a link */
   a.work-card { text-decoration: none; color: inherit; display: block; }
-  /* Coming-soon variant */
   .work-card--soon {
     background: linear-gradient(180deg, rgba(20,12,12,0.6), rgba(8,6,8,0.9));
     display: flex;
@@ -895,7 +883,6 @@
   }
   .work-card:hover .arrow { width: 90px; background: var(--signal); }
   .work-card:hover .arrow::after { border-color: var(--signal); }
-  /* Live badge */
   .work-live-badge {
     position: absolute;
     top: 22px; right: 22px;
@@ -932,7 +919,7 @@
   }
   .work-card:hover .work-frieda-canvas { transform: scale(1.06); }
  
-  /* === CREDENTIALS (formerly Mindscape) === */
+  /* === CREDENTIALS === */
   .credentials {
     padding: 140px 80px 160px;
     background: radial-gradient(ellipse at 50% 0%, #1a0808 0%, #0a0608 60%, var(--bg) 100%);
@@ -953,7 +940,6 @@
     height: 100%;
     display: block;
   }
-  /* Vignette so the cards have contrast */
   .credentials::before {
     content: '';
     position: absolute;
@@ -982,7 +968,6 @@
     aspect-ratio: 4 / 3;
     position: relative;
     cursor: none;
-    /* The card itself is the click target — no 3D here */
   }
   .cert-card-inner {
     position: absolute;
@@ -1050,7 +1035,6 @@
     align-items: center;
   }
   .cert-back-meta .verify { color: var(--signal); }
-  /* Front content */
   .cert-card .cert-icon {
     width: 44px;
     height: 44px;
@@ -1107,7 +1091,6 @@
   .cert-card:hover .cert-foot .flip-cue {
     transform: translateX(4px);
   }
-  /* subtle accent line at top of front */
   .cert-front::after {
     content: '';
     position: absolute;
@@ -1139,7 +1122,7 @@
     background: var(--ink-faint);
   }
  
-  /* === ORIGIN (about / portrait) === */
+  /* === ORIGIN === */
   .origin {
     padding: 120px 80px;
     background: var(--bg);
@@ -1284,7 +1267,6 @@
     transition: filter .4s;
   }
   .gate-content {
-    /* Wrapped so we can warp it without affecting the canvas */
     transition: transform .8s cubic-bezier(.7, 0, .3, 1), filter .6s;
     transform-origin: 50% 50%;
   }
@@ -1634,7 +1616,7 @@
     transition: transform .25s cubic-bezier(.2,.9,.3,1);
   }
  
-  /* === UI LAYER (Hidden during boot) === */
+  /* === UI LAYER === */
   html.preloading .ui-layer {
     opacity: 0 !important;
     pointer-events: none !important;
@@ -1644,7 +1626,6 @@
     transition: opacity 1.2s cubic-bezier(.2,.9,.3,1) 0.5s,
                 transform 1.2s cubic-bezier(.2,.9,.3,1) 0.5s;
   }
-  /* Hero starts hidden, revealed after preloader */
   .hero-content { opacity: 0; transition: opacity 1.2s cubic-bezier(.2,.9,.3,1); }
   .hero-content.in { opacity: 1; }
   .hero-content .hero-right {
@@ -1652,7 +1633,6 @@
     transition: transform 1.4s cubic-bezier(.2,.9,.3,1);
   }
   .hero-content.in .hero-right { transform: none; }
-  /* Lock scroll while preloader runs */
   html.preloading {
     overflow: hidden;
   }
@@ -1696,7 +1676,6 @@
     align-items: center;
     gap: 36px;
     pointer-events: none;
-    /* clip-path wipe from top */
     clip-path: inset(0 0 100% 0);
     -webkit-clip-path: inset(0 0 100% 0);
     transition: clip-path .8s cubic-bezier(.7,0,.2,1), -webkit-clip-path .8s cubic-bezier(.7,0,.2,1);
@@ -1745,7 +1724,6 @@
   .nav-overlay.open a:nth-child(4) { transition-delay: .56s, .56s, 0s; }
   .nav-overlay.open a:nth-child(5) { transition-delay: .63s, .63s, 0s; }
  
-  /* Close button — clear, foolproof exit */
   .nav-close {
     position: absolute;
     top: 24px;
@@ -1782,7 +1760,6 @@
     color: var(--signal);
     background: rgba(255,61,31,.08);
   }
-  /* Hide burger while nav is open to avoid two controls */
   html.nav-locked .burger {
     opacity: 0;
     pointer-events: none;
@@ -1822,6 +1799,16 @@
   }
   html.is-android .hero-edge {
     color: rgba(244,239,230,0.7);
+  }
+  /* Force-hide custom cursor on Android — CSS belt + JS suspenders */
+  html.is-android .cursor-dot,
+  html.is-android .cursor-ring {
+    display: none !important;
+    visibility: hidden !important;
+  }
+  /* Failed WebGL canvases — keep them transparent, no broken-image icon */
+  html.is-android canvas.webgl-failed {
+    display: none !important;
   }
 
   /* ====== ANDROID: backdrop-filter is unreliable, replace with solid bg ====== */
@@ -1929,7 +1916,6 @@
     }
     .scroll-indicator { right: 40px; }
  
-    /* Global section paddings */
     .works, .credentials, .origin, .gate, .contact, .signal-footer {
       padding-left: 40px;
       padding-right: 40px;
@@ -1960,7 +1946,6 @@
       gap: 40px;
     }
  
-    /* Arsenal scaling */
     .arsenal .label { padding-left: 40px; left: auto; }
   }
  
@@ -1979,7 +1964,6 @@
     .scroll-indicator::after { width: 50px; }
     .hero-manifest { font-size: clamp(30px, 9vw, 44px); }
  
-    /* Sections */
     .works, .credentials, .origin, .gate, .contact {
       padding-left: 20px;
       padding-right: 20px;
@@ -1988,11 +1972,9 @@
     }
     .signal-footer { padding-left: 20px; padding-right: 20px; padding-top: 70px; }
  
-    /* Works → 1 column */
     .works-grid { grid-template-columns: 1fr; gap: 20px; }
     .work-card { aspect-ratio: 4 / 5; }
  
-    /* Arsenal — mobile cards stack */
     .arsenal { padding: 60px 0 70px; }
     .arsenal .label { padding: 0 20px; margin-bottom: 30px; }
     .arsenal-mobile-stack {
@@ -2100,8 +2082,6 @@
     .arsenal-skill-card.in .skill-name   { opacity: 1; transform: none; transition-delay: .25s; }
     .arsenal-skill-card.in .skill-arrow  { opacity: 1; transform: none; transition-delay: .35s; }
  
-    /* Mindscape ring fix — no horizontal overflow */
-    /* Credentials cards stack on phone */
     .credentials { padding: 80px 20px 100px; }
     .cert-grid { grid-template-columns: 1fr; gap: 16px; }
     .cert-card { aspect-ratio: 5 / 3; }
@@ -2109,7 +2089,6 @@
     .credentials-foot { flex-direction: column; gap: 12px; }
     .credentials-foot::before, .credentials-foot::after { display: none; }
  
-    /* Origin */
     .origin-left .headline { font-size: clamp(32px, 8vw, 44px); margin-top: 30px; }
     .origin-right { display: grid; grid-template-columns: 1fr 1fr; gap: 22px 18px; }
     .pillar p { font-size: 11px; }
@@ -2118,19 +2097,16 @@
     .quote-block .qcta { position: static; justify-content: center; margin-top: 20px; }
     .quote-block .qnum { top: 12px; left: 14px; }
  
-    /* Gate */
     .gate-left .headline { font-size: clamp(28px, 7vw, 40px); }
     .gate-portal { height: 320px; }
     .gate-right { gap: 14px; flex-direction: column; }
     .gate-step { justify-content: center; }
     .gate-foot { justify-content: center; margin-top: 24px; }
  
-    /* Contact form */
     .input-line { font-size: 22px; }
     .chips { justify-content: flex-start; }
     .chip { font-size: 9px; padding: 8px 14px; }
  
-    /* Initiate bar — stacked */
     .initiate-bar {
       grid-template-columns: 1fr;
       gap: 22px;
@@ -2142,7 +2118,6 @@
     .initiate-btn { padding: 14px 30px; font-size: 12px; letter-spacing: .3em; }
     .initiate-btn::before, .initiate-btn::after { display: none; }
  
-    /* Signal footer */
     .signal-footer h2 { font-size: clamp(32px, 8vw, 44px); }
     .footer-end {
       grid-template-columns: 1fr;
@@ -2154,9 +2129,6 @@
     .footer-end .right a { margin: 0 10px; }
   }
  
-  /* ============================================== */
-  /* === TOUCH DEVICES — disable custom cursor === */
-  /* ============================================== */
   /* ============================================== */
   /* === TOUCH DEVICES — disable custom cursor === */
   /* ============================================== */
@@ -2239,7 +2211,6 @@
   @media (max-width: 768px) {
     .sound-toggle { bottom: 20px; left: 20px; width: 34px; height: 34px; }
   }
-  /* Hide on touch by default — mobile Safari mutes audio in background anyway */
   @media (hover: none) and (pointer: coarse) {
     .sound-toggle { display: none; }
   }
@@ -2344,7 +2315,6 @@
     transition: opacity 0.4s ease;
     cursor: default;
   }
-  /* Hide custom cursor when modal is open */
   .video-modal.open ~ .cursor-dot,
   .video-modal.open ~ .cursor-ring {
     display: none !important;
@@ -2416,12 +2386,9 @@
     transform: scale(1.15);
     box-shadow: 0 0 30px rgba(255,61,31,0.5);
   }
-
 </style>
 </head>
 <body>
- 
-<!-- PRELOADER REMOVED -->
  
 <!-- CURSOR -->
 <div class="cursor-dot"></div>
@@ -2465,7 +2432,7 @@
  
 <!-- HERO -->
 <section class="hero" id="hero">
-  <canvas id="hero-canvas" role="img" aria-label="Animierte Glas-Partikel-Typografie der Worte PIXEL LIGHT mit roter Flüssigkeitsexplosion, reagiert auf Mausbewegung"></canvas>
+  <canvas id="hero-canvas"></canvas>
   <div class="hero-edge tl ui-layer">
     <span class="ed-num">N° 01</span>Pixel Light — Digital Experiences
     <span class="ed-line"></span>
@@ -2497,7 +2464,8 @@
       <div class="about-frame"></div>
       <div class="about-frame bottom"></div>
       <div class="about-glow"></div>
-      <canvas id="portrait-canvas" aria-label="Portrait Damon Fieberg mit interaktivem Distortion-Effekt"></canvas>
+      <canvas id="portrait-canvas"></canvas>
+      <img class="portrait-fallback" src="assets/portrait.jpg" alt="Damon Fieberg" loading="lazy">
     </div>
     <div class="about-text reveal" style="transition-delay: .15s;">
       <div class="label">/ Der Architekt</div>
@@ -2512,7 +2480,7 @@
 <section class="arsenal" id="arsenal">
   <div class="label reveal">02 / Arsenal</div>
  
-  <!-- Desktop: Cinematic Accordion -->  <div class="arsenal-accordion">
+  <div class="arsenal-accordion">
     <article class="acc-panel" data-skill="web" style="--accent:#ff3d1f">
       <div class="acc-panel-bg"></div>
       <div class="acc-panel-inner">
@@ -2612,7 +2580,7 @@
     </article>
   </div>
  
-  <!-- Mobile-only card stack -->  <div class="arsenal-mobile-stack" id="arsenalMobileStack">
+  <div class="arsenal-mobile-stack" id="arsenalMobileStack">
     <div class="arsenal-skill-card" data-skill="web" data-kind="codeCube" data-accent="#ff3d1f" style="cursor: pointer;">
       <div class="skill-canvas"></div>
       <div class="skill-meta">
@@ -2760,16 +2728,13 @@
   </div>
 </section>
  
-<!-- MINDSCAPE -->
 <!-- CREDENTIALS -->
 <section class="credentials" id="mindscape">
   <div class="wave-background">
-    <canvas id="credentials-canvas" role="img" aria-label="Holografisches topografisches Höhenfeld als Hintergrund"></canvas>
+    <canvas id="credentials-canvas"></canvas>
   </div>
   <div class="label reveal">04 / Credentials</div>
   <div class="cert-grid">
-    
-    
     <article class="cert-card reveal" style="transition-delay:0.0s">
       <div class="cert-card-inner">  <div class="cert-face cert-front">
           <div>
@@ -2875,8 +2840,6 @@
         </div>
       </div>
     </article>
-  
-  
   </div>
   <div class="credentials-foot">Continuously evolving · Always shipping</div>
 </section>
@@ -2937,7 +2900,7 @@
         <p class="sub reveal" style="transition-delay:.1s">Tritt ein.</p>
       </div>
       <div class="gate-portal" id="gatePortal" role="button" tabindex="0" aria-label="Portal aktivieren">
-        <canvas id="gate-canvas" role="img" aria-label="Animiertes Gravitations-Portal mit Wirbel-Effekt beim Klick"></canvas>
+        <canvas id="gate-canvas"></canvas>
         <div class="gate-plus">+</div>
       </div>
       <div class="gate-right">
@@ -3017,14 +2980,13 @@
 <button class="sound-toggle ui-layer" id="soundToggle" aria-label="Sound an/aus" type="button">
   <span class="bars"><span></span><span></span><span></span><span></span></span>
 </button>
-
+ 
 <!-- COOKIE PILL -->
 <div class="cookie-pill" id="cookiePill" role="dialog" aria-label="Cookie-Hinweis">
   <span class="cookie-text">Wir nutzen Cookies für eine bessere Experience.</span>
   <button class="cookie-btn cookie-dismiss" id="cookieDismiss">Dismiss</button>
   <button class="cookie-btn" id="cookieAccept">Accept</button>
 </div>
- 
 <script>
 // CRITICAL: Wait for all defer'd scripts to finish before running app code.
 // On Android Chrome the timing race here was causing WebGL canvases (portrait, 
@@ -3036,8 +2998,13 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
 /* ============== TOUCH & ANDROID DETECTION ============== */
-const isTouch = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
 const isAndroid = /Android/i.test(navigator.userAgent);
+// Robust touch detection — matchMedia alone fails on some Samsung Internet versions.
+// On Android force-true regardless of media query (it's always touch).
+const isTouch = isAndroid 
+  || window.matchMedia('(hover: none) and (pointer: coarse)').matches
+  || ('ontouchstart' in window)
+  || (navigator.maxTouchPoints > 0);
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 document.documentElement.classList.toggle('is-touch', isTouch);
 document.documentElement.classList.toggle('is-android', isAndroid);
@@ -3053,7 +3020,7 @@ window.addEventListener('orientationchange', () => {
     document.documentElement.style.setProperty('--vh', vh + 'px');
   }, 100);
 });
- 
+
 /* ============== WEB AUDIO API: SYNTHESIZED SOUND DESIGN ============== */
 const SoundManager = (function() {
   let ctx;
@@ -3072,12 +3039,10 @@ const SoundManager = (function() {
     masterGain.connect(ctx.destination);
     initialized = true;
   }
-  // Browser policy: AudioContext can only start after user interaction
   ['click', 'mousemove', 'touchstart', 'keydown'].forEach(ev =>
     document.addEventListener(ev, init, { once: true, passive: true })
   );
  
-  // Throttle hover sounds — flying through panels shouldn't machine-gun
   let lastHover = 0;
  
   return {
@@ -3120,7 +3085,6 @@ const SoundManager = (function() {
     },
     playVortex() {
       if (!initialized || muted) return;
-      // Sub-bass drop for the gate
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.type = 'sine';
@@ -3133,7 +3097,6 @@ const SoundManager = (function() {
       gain.connect(masterGain);
       osc.start();
       osc.stop(ctx.currentTime + 1.5);
-      // Add a shimmer noise burst on top
       const noise = ctx.createBufferSource();
       const buffer = ctx.createBuffer(1, ctx.sampleRate * 0.4, ctx.sampleRate);
       const data = buffer.getChannelData(0);
@@ -3153,7 +3116,6 @@ const SoundManager = (function() {
   };
 })();
  
-// Bind hover sounds to interactive elements
 document.querySelectorAll('a, button, .chip, .acc-panel, .arsenal-skill-card, .drawer-project, .work-card, .cert-card').forEach(el => {
   el.addEventListener('mouseenter', () => SoundManager.playHover());
 });
@@ -3165,7 +3127,7 @@ if (typeof Lenis !== 'undefined' && !reduceMotion) {
     duration: 1.2,
     easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
     smoothWheel: true,
-    smoothTouch: false, // keep native touch on mobile — feels better
+    smoothTouch: false,
     touchMultiplier: 1.5,
   });
   let lenisRafActive = true;
@@ -3176,7 +3138,6 @@ if (typeof Lenis !== 'undefined' && !reduceMotion) {
     requestAnimationFrame(raf);
   }
   requestAnimationFrame(raf);
-  // Hash links: hand off to Lenis for buttery smoothness
   document.addEventListener('click', e => {
     const a = e.target.closest('a[href^="#"]');
     if (!a) return;
@@ -3198,9 +3159,7 @@ function initGsapScrollFlow() {
   gsapScrollInitialized = true;
   gsap.registerPlugin(ScrollTrigger);
  
-  // Sync ScrollTrigger with Lenis so smooth-scroll values are respected
   if (typeof lenis !== 'undefined' && lenis) {
-    // Stop Lenis's own RAF — GSAP's ticker will drive it from here on
     if (window.__stopLenisRaf) window.__stopLenisRaf();
     lenis.on('scroll', ScrollTrigger.update);
     gsap.ticker.add((time) => {
@@ -3209,8 +3168,6 @@ function initGsapScrollFlow() {
     gsap.ticker.lagSmoothing(0);
   }
  
-  // 1. HERO DEPTH FADE (no pinning — just opacity/scale on the canvas as user scrolls past)
-  // Scrolls naturally; the hero content fades + scales for depth as About comes into view
   if (!isPhoneLayout) {
     gsap.to("#hero-canvas, .hero-content", {
       opacity: 0.15,
@@ -3226,7 +3183,6 @@ function initGsapScrollFlow() {
     });
   }
  
-  // 2. SELECTED WORKS PARALLAX (desktop/tablet only)
   if (!isPhoneLayout) {
     gsap.utils.toArray('.works-grid .work-card').forEach((card, i) => {
       gsap.fromTo(card,
@@ -3246,7 +3202,6 @@ function initGsapScrollFlow() {
     });
   }
  
-  // 3. CREDENTIALS WAVE PARALLAX
   if (!isPhoneLayout) {
     gsap.to(".wave-background", {
       y: 100,
@@ -3261,7 +3216,6 @@ function initGsapScrollFlow() {
     });
   }
  
-  // 4. ABOUT-ME PORTRAIT PARALLAX
   if (!isPhoneLayout) {
     gsap.fromTo(".about-image-wrapper",
       { y: -30 },
@@ -3279,20 +3233,16 @@ function initGsapScrollFlow() {
     );
   }
  
-  // Recalc on resize and after load (image dimensions etc)
   window.addEventListener('load', () => ScrollTrigger.refresh());
 }
-// Defer until preloader is done — avoids fighting with the boot animation
 window.addEventListener('preloader-done', () => {
   setTimeout(initGsapScrollFlow, 100);
 });
-// Fallback: if preloader event never fires (reduced motion etc), init after DOM ready
 if (reduceMotion) {
   setTimeout(initGsapScrollFlow, 200);
 }
  
-/* ============== PRELOADER (Core Splinter) ============== */
-// Always scroll to top on page load so the preloader is visible
+/* ============== PRELOADER ============== */
 if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 window.scrollTo(0, 0);
 document.documentElement.classList.add('preloading');
@@ -3319,8 +3269,6 @@ window.addEventListener('resize', () => {
   resizeTimer = setTimeout(() => {
     const currentWidth = window.innerWidth;
     const isMobile = window.matchMedia('(max-width: 768px)').matches;
-    // On mobile, only trigger heavy WebGL resizes if the WIDTH changes (e.g. rotation).
-    // This prevents the address-bar scroll from destroying the aspect ratio and tanking performance.
     if (isMobile && currentWidth === lastWinWidth) return;
     lastWinWidth = currentWidth;
     resizeHandlers.forEach(fn => { try { fn(); } catch(e) { console.error(e); } });
@@ -3357,7 +3305,6 @@ burger.addEventListener('click', () => {
   navOverlay.classList.toggle('open', open);
   if (open) lockScroll(); else unlockScroll();
 });
-// Close on ESC
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape' && burger.classList.contains('open')) closeNav();
 });
@@ -3365,7 +3312,7 @@ navOverlay.querySelectorAll('a').forEach(a => a.addEventListener('click', closeN
 document.getElementById('closeNavBtn')?.addEventListener('click', closeNav);
  
 /* ============== ANIMATION REGISTRY (pause off-screen) ============== */
-const animRegistry = new Map(); // element → { tick, active }
+const animRegistry = new Map();
 function registerAnim(el, tick) {
   animRegistry.set(el, { tick, active: false });
 }
@@ -3383,12 +3330,10 @@ if (!isTouch) {
   const ring = document.querySelector('.cursor-ring');
   let mx = 0, my = 0, rx = 0, ry = 0;
   let cursorTicking = false;
-  // Center-offset baked into the translate3d so dot/ring sit on the cursor point
   const HALF_DOT = 3;
   const HALF_RING = 16;
   window.addEventListener('mousemove', e => {
     mx = e.clientX; my = e.clientY;
-    // Dot snaps instantly — zero perceived lag
     dot.style.transform = `translate3d(${mx - HALF_DOT}px, ${my - HALF_DOT}px, 0)`;
     if (!cursorTicking) {
       cursorTicking = true;
@@ -3399,7 +3344,6 @@ if (!isTouch) {
     rx += (mx - rx) * 0.22;
     ry += (my - ry) * 0.22;
     ring.style.transform = `translate3d(${rx - HALF_RING}px, ${ry - HALF_RING}px, 0)`;
-    // Stop the loop when ring has caught up — saves frames when idle
     if (Math.abs(mx - rx) < 0.1 && Math.abs(my - ry) < 0.1) {
       rx = mx; ry = my;
       ring.style.transform = `translate3d(${rx - HALF_RING}px, ${ry - HALF_RING}px, 0)`;
@@ -3412,7 +3356,6 @@ if (!isTouch) {
     el.addEventListener('mouseenter', () => ring.classList.add('hover'));
     el.addEventListener('mouseleave', () => ring.classList.remove('hover'));
   });
-  // Hide custom cursor entirely while a form field is focused — let the caret breathe
   document.querySelectorAll('.input-line').forEach(el => {
     el.addEventListener('focus', () => {
       dot.style.display = 'none';
@@ -3424,7 +3367,6 @@ if (!isTouch) {
     });
   });
 } else {
-  // Hide cursor elements completely on touch
   document.querySelector('.cursor-dot')?.remove();
   document.querySelector('.cursor-ring')?.remove();
 }
@@ -3439,12 +3381,9 @@ document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 function splitHeadline(el) {
   if (el.dataset.splitDone) return;
   el.dataset.splitDone = '1';
-  // Convert line breaks to line markers, preserve <em>
   const html = el.innerHTML.trim();
-  // Replace <br> with a sentinel
   const lines = html.split(/<br\s*\/?>/i);
   el.innerHTML = lines.map(line => {
-    // Wrap each word, preserve <em> tags around words
     const wordHtml = line.replace(/(<em>)?([^\s<]+)(<\/em>)?/g, (m, open, w, close) => {
       const inner = (open || '') + w + (close || '');
       return `<span class="split-word">${inner}</span>`;
@@ -3464,7 +3403,6 @@ splitTargets.forEach(splitHeadline);
 const splitObserver = new IntersectionObserver(entries => {
   entries.forEach(en => {
     if (en.isIntersecting) {
-      // Skip the hero — it's revealed by the preloader sequence
       if (en.target.closest('.hero')) return;
       revealSplit(en.target);
       splitObserver.unobserve(en.target);
@@ -3473,7 +3411,6 @@ const splitObserver = new IntersectionObserver(entries => {
 }, { threshold: .2 });
 splitTargets.forEach(t => { if (!t.closest('.hero')) splitObserver.observe(t); });
 function runSplitReveals() {
-  // Called by preloader finish — reveals hero only
   const heroSplit = document.querySelector('.hero [data-split]');
   if (heroSplit) revealSplit(heroSplit);
 }
@@ -3506,7 +3443,6 @@ document.querySelectorAll('.chip').forEach(c => {
   });
 });
  
-/* Auto-resize textarea */
 const messageArea = document.querySelector('.input-area');
 if (messageArea) {
   const autoresize = () => {
@@ -3514,7 +3450,6 @@ if (messageArea) {
     messageArea.style.height = messageArea.scrollHeight + 'px';
   };
   messageArea.addEventListener('input', autoresize);
-  // Enter-to-submit (Shift+Enter still inserts newline)
   messageArea.addEventListener('keydown', e => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -3523,58 +3458,29 @@ if (messageArea) {
   });
 }
  
-/* Form submission */
-const contactForm = document.getElementById('contactForm');
-if (contactForm) {
-  contactForm.addEventListener('submit', e => {
-    e.preventDefault();
-    const btn = contactForm.querySelector('.initiate-btn');
-    const original = btn.textContent;
-    btn.textContent = 'SIGNAL GESENDET';
-    btn.style.color = 'var(--signal)';
-    setTimeout(() => {
-      contactForm.reset();
-      if (messageArea) messageArea.style.height = '';
-      btn.textContent = original;
-      btn.style.color = '';
-      // reset chips to default
-      document.querySelectorAll('.chip').forEach(x => x.classList.remove('active'));
-      document.querySelectorAll('.chip')[1]?.classList.add('active');
-      if (projectInput) projectInput.value = 'Web Experience';
-      
-      // Reveal the signal footer
-      const signalFooter = document.getElementById('signalFooter');
-      if (signalFooter) {
-        signalFooter.style.display = '';
-        signalFooter.style.opacity = '0';
-        signalFooter.style.transform = 'translateY(40px)';
-        signalFooter.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
-        requestAnimationFrame(() => {
-          signalFooter.style.opacity = '1';
-          signalFooter.style.transform = 'translateY(0)';
-        });
-        // Smooth scroll to the revealed section
-        setTimeout(() => {
-          signalFooter.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 100);
-      }
-    }, 2400);
-  });
-}
- 
-/* ============== HERO — GLASS PIXEL LIGHT TYPO ==============
-   Approach: render "PIXEL / LIGHT" to an offscreen canvas, sample alpha,
-   spawn 3D points (glass-like) at sampled positions, animate splash. */
+/* ============== HERO — GLASS PIXEL LIGHT TYPO ============== */
 function initHeroScene() {
   const canvas = document.getElementById('hero-canvas');
-  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  let renderer;
+  try {
+    renderer = new THREE.WebGLRenderer({ 
+      canvas, alpha: true, antialias: true,
+      failIfMajorPerformanceCaveat: false,
+      powerPreference: 'high-performance'
+    });
+  } catch(e) {
+    console.warn('Hero WebGL init failed:', e);
+    canvas.classList.add('webgl-failed');
+    return;
+  }
   renderer.setClearColor(0x000000, 0);
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
   camera.position.z = 14;
  
-  // Bloom composer (graceful fallback if scripts didn't load)
-  const useBloom = typeof THREE.EffectComposer !== 'undefined' && !isTouch;
+  // Bloom: Desktop only. On Android even non-mobile, the post-process at low 
+  // pixel ratios causes chromatic aberration on the particle text. Skip it.
+  const useBloom = typeof THREE.EffectComposer !== 'undefined' && !isTouch && !isAndroid;
   let composer = null;
   if (useBloom) {
     composer = new THREE.EffectComposer(renderer);
@@ -3592,7 +3498,6 @@ function initHeroScene() {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, heroIsMobile ? 1.5 : 2));
     if (composer) composer.setSize(w, h);
     camera.aspect = w / h;
-    // Responsive camera: on narrow screens push the type UPWARD by lowering camera Y
     if (w < 480)      { heroFinalZ = 42; heroFinalY = -3.0; }
     else if (w < 768) { heroFinalZ = 34; heroFinalY = -1.0; }
     else if (w < 1100){ heroFinalZ = 30; heroFinalY = 0.0; }
@@ -3606,12 +3511,10 @@ function initHeroScene() {
   }
   let heroFinalZ = 14, heroFinalY = 0;
   let dollyStarted = false, dollyDone = false, dollyT0 = 0;
-  // Expose dolly trigger to preloader
   window.__heroDolly = () => { dollyStarted = true; dollyT0 = performance.now(); };
   resize();
   onResize(resize);
  
-  // Sample text into points
   const isMobile = window.innerWidth < 768;
   const cWidth = isMobile ? 1000 : 1800;
   const cHeight = isMobile ? 600 : 350;
@@ -3796,9 +3699,7 @@ const splash = new THREE.Points(splashGeom, splashMat);
     mat.uniforms.uMouse.value.copy(mouse);
     splashMat.uniforms.uTime.value = t;
     points.rotation.y = Math.sin(t * .15) * .05;
-    // Dolly zoom from far -> final position
     if (dollyStarted) {
-      // Smooth majestic boom
       coreGroup.scale.lerp(new THREE.Vector3(25, 25, 25), 0.03);
       coreMat1.opacity = Math.max(0, coreMat1.opacity - 0.02);
       coreMat2.opacity = Math.max(0, coreMat2.opacity - 0.02);
@@ -3822,14 +3723,11 @@ const splash = new THREE.Points(splashGeom, splashMat);
       mat.uniforms.uResolve.value = 1.0 - resolveEased;
     } else {
       mat.uniforms.uResolve.value = 1.0;
-      // Calculate charge (0 to 1 over the 2.5s preloader)
       const charge = Math.min(1.0, performance.now() / 2500);
       
-      // Slow, majestic growth
       const scale = 1.2 + (charge * 1.4) + Math.sin(t * 3.0) * 0.15;
       coreGroup.scale.set(scale, scale, scale);
       
-      // Elegant, smooth rotation that slightly accelerates
       const r1 = t * (0.5 + charge * 0.4);
       const r2 = t * (0.4 + charge * 0.3);
       
@@ -3842,7 +3740,6 @@ const splash = new THREE.Points(splashGeom, splashMat);
       coreM3.rotation.x = -r1 * 0.7;
       coreM3.rotation.z = -r2 * 1.4;
       
-      // Elegant warm glow shift
       coreMat1.color.lerpHSL(new THREE.Color(0xffeadd), charge * 0.002);
     }
     if (composer) composer.render(); else renderer.render(scene, camera);
@@ -3853,9 +3750,11 @@ const splash = new THREE.Points(splashGeom, splashMat);
   animate();
 }
 
-// Wait for viewport to stabilize on Android — address bar settle + first paint
-if (/Android/i.test(navigator.userAgent)) {
-  // Two RAFs + small delay = guaranteed past first layout & first paint
+// Android: wait for viewport to stabilize (address bar settle + first paint)
+// before initializing the WebGL renderer. This fixes the rendering bug seen
+// when arriving via Google Search where the layout race causes the initial
+// canvas to render with a broken aspect ratio.
+if (isAndroid) {
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
       setTimeout(initHeroScene, 50);
@@ -3864,7 +3763,6 @@ if (/Android/i.test(navigator.userAgent)) {
 } else {
   initHeroScene();
 }
- 
  
 /* ============== WORK VIDEOS — pause when off-screen ============== */
 (function workVideos() {
@@ -3884,14 +3782,38 @@ if (/Android/i.test(navigator.userAgent)) {
   const canvas = document.getElementById('portrait-canvas');
   if (!canvas) return;
  
-  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  // Lazy-init: defer WebGL context creation until section is near viewport.
+  // On Android, holding 4+ contexts open simultaneously caused later canvases 
+  // to fail with white-render. By staggering inits via scroll, we sidestep 
+  // Samsung Internet's aggressive context limits.
+  let initialized = false;
+  const lazyTrigger = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting && !initialized) {
+      initialized = true;
+      lazyTrigger.disconnect();
+      doInit();
+    }
+  }, { rootMargin: '200px 0px 200px 0px' });
+  lazyTrigger.observe(canvas);
+  
+  function doInit() {
+  let renderer;
+  try {
+    renderer = new THREE.WebGLRenderer({ 
+      canvas, alpha: true, antialias: true,
+      failIfMajorPerformanceCaveat: false,
+      powerPreference: 'high-performance'
+    });
+  } catch(e) {
+    console.warn('Portrait WebGL init failed:', e);
+    canvas.classList.add('webgl-failed');
+    return;
+  }
   renderer.setClearColor(0x000000, 0);
   const scene = new THREE.Scene();
-  // Plane fills the entire ortho frustum (-1..1)
   const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 10);
   camera.position.z = 1;
  
-  // Load texture and store its native aspect for correct UV scaling later
   const textureLoader = new THREE.TextureLoader();
   let texAspect = 1;
   let texLoaded = false;
@@ -3936,33 +3858,26 @@ if (/Android/i.test(navigator.userAgent)) {
       uniform vec2 uCoverScale;
  
       void main() {
-        // Center-based UV
         vec2 uv = vUv - 0.5;
-        // Apply cover scale so the image fills the plane without stretching
         uv /= uCoverScale;
         uv += 0.5;
  
-        // If outside the cropped image, return transparent
         if (uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0 || uv.y > 1.0) {
           gl_FragColor = vec4(0.0);
           return;
         }
  
-        // Distortion strength is highest near the mouse, fades with distance
         float distFromMouse = distance(vUv, uMouse);
         float localStrength = smoothstep(0.5, 0.0, distFromMouse) * uHover;
  
-        // Liquid wave displacement — different freqs/phases on each axis
         float wave  = sin(uv.y * 18.0 + uTime * 1.8) * 0.018 * localStrength;
         float waveX = cos(uv.x * 18.0 + uTime * 1.6) * 0.018 * localStrength;
  
-        // RGB chromatic aberration (split with displacement)
         vec4 rColor = texture2D(uTexture, uv + vec2(wave, waveX) * 1.3);
         vec4 gColor = texture2D(uTexture, uv);
         vec4 bColor = texture2D(uTexture, uv - vec2(wave, waveX) * 1.3);
  
         vec3 finalColor = vec3(rColor.r, gColor.g, bColor.b);
-        // Subtle warm grade to match the dark/cinematic theme
         float gray = dot(finalColor, vec3(0.299, 0.587, 0.114));
         finalColor = mix(finalColor, vec3(gray) * vec3(1.15, 1.0, 0.85), 0.25);
  
@@ -3974,17 +3889,14 @@ if (/Android/i.test(navigator.userAgent)) {
   const mesh = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), mat);
   scene.add(mesh);
  
-  // Cover-scale: simulate object-fit:cover for the texture inside the plane
   function updateCoverScale() {
     if (!texLoaded) return;
     const planeAspect = mat.uniforms.uPlaneAspect.value;
     let sx = 1, sy = 1;
     if (texAspect > planeAspect) {
-      // Texture is wider than plane → fit height, crop sides
       sx = planeAspect / texAspect;
       sy = 1;
     } else {
-      // Texture is taller → fit width, crop top/bottom
       sx = 1;
       sy = texAspect / planeAspect;
     }
@@ -4029,12 +3941,12 @@ if (/Android/i.test(navigator.userAgent)) {
     requestAnimationFrame(animate);
   }
   
-  // Pre-compile shaders to eliminate scroll jank when it enters viewport
   renderer.compile(scene, camera);
   
   registerAnim(canvas, animate);
   animObserver.observe(canvas);
   animate();
+  } // end doInit
 })();
  
 /* ============== CREDENTIALS — FLIP CARDS ============== */
@@ -4055,14 +3967,38 @@ if (/Android/i.test(navigator.userAgent)) {
 (function credentialsScene() {
   const canvas = document.getElementById('credentials-canvas');
   if (!canvas) return;
-  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  
+  // Lazy-init via IntersectionObserver (see portrait scene for rationale)
+  let initialized = false;
+  const lazyTrigger = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting && !initialized) {
+      initialized = true;
+      lazyTrigger.disconnect();
+      doInit();
+    }
+  }, { rootMargin: '300px 0px 300px 0px' });
+  lazyTrigger.observe(canvas);
+  
+  function doInit() {
+  let renderer;
+  try {
+    renderer = new THREE.WebGLRenderer({ 
+      canvas, alpha: true, antialias: true,
+      failIfMajorPerformanceCaveat: false,
+      powerPreference: 'high-performance'
+    });
+  } catch(e) {
+    console.warn('Credentials WebGL init failed:', e);
+    canvas.classList.add('webgl-failed');
+    return;
+  }
   renderer.setClearColor(0x000000, 0);
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
   camera.position.set(0, 5.5, 14);
   camera.lookAt(0, -1, 0);
  
-  const useBloomCR = typeof THREE.EffectComposer !== 'undefined' && !isTouch;
+  const useBloomCR = typeof THREE.EffectComposer !== 'undefined' && !isTouch && !isAndroid;
   let composerCR = null;
   if (useBloomCR) {
     composerCR = new THREE.EffectComposer(renderer);
@@ -4083,7 +4019,6 @@ if (/Android/i.test(navigator.userAgent)) {
   }
   resize(); onResize(resize);
  
-  // Wider plane to fill the full viewport
   const size = 26;
   const segments = isTouch ? 50 : 80;
   const geom = new THREE.PlaneGeometry(size, size, segments, segments);
@@ -4167,37 +4102,56 @@ if (/Android/i.test(navigator.userAgent)) {
   registerAnim(canvas, animate);
   animObserver.observe(canvas);
   animate();
+  } // end doInit
 })();
- 
- 
- 
- 
  
 /* ============== GATE — KINOREIFER GRAVITATIONS-VORTEX ============== */
 (function gateScene() {
   const canvas = document.getElementById('gate-canvas');
   const portal = document.getElementById('gatePortal');
   const gateSection = document.getElementById('gate');
+  if (!canvas) return;
   
-  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-  renderer.setClearColor(0x000000, 0); // Transparent background
+  // Lazy-init via IntersectionObserver
+  let initialized = false;
+  const lazyTrigger = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting && !initialized) {
+      initialized = true;
+      lazyTrigger.disconnect();
+      doInit();
+    }
+  }, { rootMargin: '300px 0px 300px 0px' });
+  lazyTrigger.observe(canvas);
+  
+  function doInit() {
+  let renderer;
+  try {
+    renderer = new THREE.WebGLRenderer({ 
+      canvas, alpha: true, antialias: true,
+      failIfMajorPerformanceCaveat: false,
+      powerPreference: 'high-performance'
+    });
+  } catch(e) {
+    console.warn('Gate WebGL init failed:', e);
+    canvas.classList.add('webgl-failed');
+    return;
+  }
+  renderer.setClearColor(0x000000, 0);
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
   camera.position.z = 18;
 
-  // Particle System
   const N = 5000;
   const positions = new Float32Array(N * 3);
   const colors = new Float32Array(N * 3);
   const params = [];
 
-  const color1 = new THREE.Color(0xff3d1f); // brand red
-  const color2 = new THREE.Color(0x111111); // dark core
-  const color3 = new THREE.Color(0xffffff); // white sparks
+  const color1 = new THREE.Color(0xff3d1f);
+  const color2 = new THREE.Color(0x111111);
+  const color3 = new THREE.Color(0xffffff);
 
   for(let i=0; i<N; i++) {
     const angle = Math.random() * Math.PI * 2;
-    // Exponential distribution to cluster near center
     const r = Math.pow(Math.random(), 2.5) * 6 + 1.3; 
     positions[i*3] = Math.cos(angle) * r;
     positions[i*3+1] = Math.sin(angle) * r;
@@ -4206,7 +4160,7 @@ if (/Android/i.test(navigator.userAgent)) {
     params.push({
       angle: angle,
       radius: r,
-      speed: (0.002 + Math.random() * 0.01) * (10 / r), // inner orbits faster
+      speed: (0.002 + Math.random() * 0.01) * (10 / r),
       zSpeed: (Math.random()-0.5) * 0.015
     });
 
@@ -4234,13 +4188,11 @@ if (/Android/i.test(navigator.userAgent)) {
   const points = new THREE.Points(geometry, material);
   scene.add(points);
 
-  // Black hole center
   const bhGeo = new THREE.SphereGeometry(1.2, 32, 32);
-  const bhMat = new THREE.MeshBasicMaterial({ color: 0x030203 }); // slightly above black
+  const bhMat = new THREE.MeshBasicMaterial({ color: 0x030203 });
   const blackHole = new THREE.Mesh(bhGeo, bhMat);
   scene.add(blackHole);
 
-  // Shockwave ring
   const swGeo = new THREE.RingGeometry(1.2, 1.3, 64);
   const swMat = new THREE.MeshBasicMaterial({ color: 0xff3d1f, transparent: true, opacity: 0, side: THREE.DoubleSide });
   const shockwave = new THREE.Mesh(swGeo, swMat);
@@ -4266,11 +4218,9 @@ if (/Android/i.test(navigator.userAgent)) {
     const plus = document.querySelector('.gate-plus');
     if (plus) plus.style.opacity = '0';
     
-    // Shockwave animation
     gsap.to(shockwave.scale, { x: 25, y: 25, duration: 1.8, ease: "power2.out" });
     gsap.to(swMat, { opacity: 0.7, duration: 0.2, yoyo: true, repeat: 1 });
     
-    // Singularity collapse & expand
     gsap.to(blackHole.scale, { x: 0.01, y: 0.01, z: 0.01, duration: 0.5, ease: "power3.in", onComplete: () => {
         gsap.to(blackHole.scale, { x: 1, y: 1, z: 1, duration: 1.2, ease: "elastic.out(1, 0.5)" });
     }});
@@ -4283,8 +4233,6 @@ if (/Android/i.test(navigator.userAgent)) {
       swMat.opacity = 0;
     }, 2400);
     
-    // After the implosion peaks, smoothly scroll to the contact section
-    // This creates the feeling of "stepping through the portal"
     setTimeout(() => {
       const contactSection = document.getElementById('contact');
       if (contactSection) {
@@ -4299,7 +4247,7 @@ if (/Android/i.test(navigator.userAgent)) {
     const r = canvas.getBoundingClientRect();
     const nx = ((e.clientX - r.left) / r.width) * 2 - 1;
     const ny = -((e.clientY - r.top) / r.height) * 2 + 1;
-    targetRotY = nx * 0.4; // Lensing rotation effect
+    targetRotY = nx * 0.4;
     targetRotX = -ny * 0.4;
   });
   canvas.addEventListener('mouseleave', () => { targetRotX = 0; targetRotY = 0; });
@@ -4315,7 +4263,6 @@ if (/Android/i.test(navigator.userAgent)) {
     
     t += 0.01;
     
-    // Smooth camera/object tilt
     points.rotation.x += (targetRotX - points.rotation.x) * 0.05;
     points.rotation.y += (targetRotY - points.rotation.y) * 0.05;
     
@@ -4327,14 +4274,12 @@ if (/Android/i.test(navigator.userAgent)) {
       
       let currentR = p.radius;
       if (isImploding) {
-         // Pull particles inward during implosion
          currentR = Math.max(1.2, currentR - 0.2); 
       }
       
       pos[i*3] = Math.cos(p.angle) * currentR;
       pos[i*3+1] = Math.sin(p.angle) * currentR;
       
-      // Undulate Z slightly
       pos[i*3+2] += p.zSpeed;
       if(Math.abs(pos[i*3+2]) > 1.5) p.zSpeed *= -1;
     }
@@ -4348,7 +4293,6 @@ if (/Android/i.test(navigator.userAgent)) {
   animObserver.observe(canvas);
   draw();
 
-  // Step indicator
   const steps = document.querySelectorAll('.gate-step');
   let cur = 0;
   setInterval(() => {
@@ -4356,11 +4300,10 @@ if (/Android/i.test(navigator.userAgent)) {
     cur = (cur + 1) % steps.length;
     steps[cur].classList.add('active');
   }, 2800);
+  } // end doInit
 })();
  
 /* ============== GLOBAL SCROLL VELOCITY ============== */
-// Smooth velocity tracker — used to drive scroll-reactive WebGL animations.
-// Updated on every scroll event; decays toward zero each frame.
 const scrollVel = { raw: 0, smooth: 0, lastY: window.scrollY };
 window.addEventListener('scroll', () => {
   const y = window.scrollY;
@@ -4368,30 +4311,24 @@ window.addEventListener('scroll', () => {
   scrollVel.lastY = y;
 }, { passive: true });
 (function velocityDecay() {
-  // Smoothed velocity: lerp toward raw, then bleed raw back toward 0
   scrollVel.smooth += (scrollVel.raw - scrollVel.smooth) * 0.18;
   scrollVel.raw *= 0.85;
   requestAnimationFrame(velocityDecay);
 })();
  
 /* ============== LAYOUT BREAKPOINT WATCHER ============== */
-// Arsenal has two completely different rendering paths (mobile card stack vs desktop
-// 3D fly-through). We pick one at init based on viewport width. If the user crosses
-// the breakpoint (e.g. resizes the window or rotates a tablet), reload the page so
-// the right path initializes cleanly.
 const phoneMQ = window.matchMedia('(max-width: 768px)');
 let _wasPhone = phoneMQ.matches;
 function onLayoutCross(e) {
   if (e.matches !== _wasPhone) {
-    // Debounce — avoid reload while user is mid-drag in DevTools
     clearTimeout(window._layoutReloadT);
     window._layoutReloadT = setTimeout(() => location.reload(), 350);
   }
 }
 if (phoneMQ.addEventListener) phoneMQ.addEventListener('change', onLayoutCross);
-else phoneMQ.addListener(onLayoutCross); // Safari < 14 fallback
+else phoneMQ.addListener(onLayoutCross);
  
-/* ============== ARSENAL — DRAWER LOGIC (GLOBAL) ============== */
+/* ============== ARSENAL — DRAWER LOGIC ============== */
 const drawer = document.getElementById('drawer');
 const drawerOverlay = document.getElementById('drawerOverlay');
 const drawerClose = document.getElementById('drawerClose');
@@ -4488,13 +4425,11 @@ if (isPhoneLayout) {
   (function arsenalMobile() {
     const cards = document.querySelectorAll('.arsenal-skill-card');
  
-    // Stagger reveal — first time a card enters the viewport, it animates in.
-    // Cards already on screen reveal in order with index-based delay.
     const cardObserver = new IntersectionObserver((entries) => {
       entries.forEach(en => {
         if (en.isIntersecting && !en.target.classList.contains('in')) {
           const idx = parseInt(en.target.dataset.idx, 10) || 0;
-          const delay = Math.min(idx, 5) * 80; // cap at 5 to avoid long waits
+          const delay = Math.min(idx, 5) * 80;
           setTimeout(() => en.target.classList.add('in'), delay);
           cardObserver.unobserve(en.target);
         }
@@ -4505,7 +4440,6 @@ if (isPhoneLayout) {
       card.dataset.idx = idx;
       cardObserver.observe(card);
       
-      // Open drawer on mobile tap
       card.addEventListener('click', () => {
         openDrawer(card.dataset.skill);
       });
@@ -4516,7 +4450,18 @@ if (isPhoneLayout) {
       const cv = document.createElement('canvas');
       host.appendChild(cv);
  
-      const renderer = new THREE.WebGLRenderer({ canvas: cv, alpha: true, antialias: true });
+      let renderer;
+      try {
+        renderer = new THREE.WebGLRenderer({ 
+          canvas: cv, alpha: true, antialias: true,
+          failIfMajorPerformanceCaveat: false,
+          powerPreference: 'high-performance'
+        });
+      } catch(e) {
+        console.warn('Arsenal card WebGL failed:', e);
+        cv.classList.add('webgl-failed');
+        return;
+      }
       renderer.setClearColor(0x000000, 0);
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
@@ -4524,15 +4469,13 @@ if (isPhoneLayout) {
       function resize() {
         const r = host.getBoundingClientRect();
         renderer.setSize(r.width, r.height, false);
-        renderer.setPixelRatio(1); // Force 1x pixel ratio on mobile for massive performance gain
+        renderer.setPixelRatio(1);
         camera.aspect = r.width / r.height;
         camera.updateProjectionMatrix();
       }
       resize(); onResize(resize);
  
-      // Build a small artifact appropriate for the card
       const group = new THREE.Group();
-      // Per-card baseline spin (multiplied at runtime by velocity factor)
       let baseSpinY = 0, baseSpinX = 0;
  
       if (kind === 'codeCube') {
@@ -4575,7 +4518,7 @@ if (isPhoneLayout) {
           ring.userData.basePhase = i * 0.6;
           group.add(ring);
         }
-            } else if (kind === 'prism') {
+      } else if (kind === 'prism') {
         const g = new THREE.OctahedronGeometry(0.7, 0);
         group.add(new THREE.Mesh(g, new THREE.MeshBasicMaterial({ color: accent, transparent: true, opacity: 0.8, wireframe: true })));
         const innerG = new THREE.OctahedronGeometry(0.35, 0);
@@ -4590,7 +4533,7 @@ if (isPhoneLayout) {
         group.add(l);
         baseSpinY = 0.01;
         baseSpinX = 0.01;
-} else if (kind === 'helix') {
+      } else if (kind === 'helix') {
         const turns = 3, segs = 120, pts1 = [], pts2 = [];
         for (let i = 0; i <= segs; i++) {
           const tt = i / segs, a = tt * Math.PI * 2 * turns, y = (tt - 0.5) * 1.6;
@@ -4611,25 +4554,19 @@ if (isPhoneLayout) {
         if (rec && !rec.active) { requestAnimationFrame(animate); return; }
         const t = clock.getElapsedTime();
  
-        // Velocity factor: 1 at rest, scales up with absolute scroll speed.
-        // Capped so violent flicks don't make it nauseating.
         const vAbs = Math.min(60, Math.abs(scrollVel.smooth));
-        const velFactor = 1 + vAbs * 0.18;          // up to ~11x at full flick
-        // Direction sign — scroll down = positive, scroll up = negative
+        const velFactor = 1 + vAbs * 0.18;
         const velSign = Math.sign(scrollVel.smooth) || 1;
  
-        // Apply to base spin
         if (baseSpinY) group.rotation.y += baseSpinY * velFactor * velSign;
         if (baseSpinX) group.rotation.x += baseSpinX * velFactor;
  
-        // Per-child spinning artifacts (codeCube)
         group.children.forEach(c => {
           if (c.userData.spin) {
             c.rotation.x += c.userData.spin.x * velFactor;
             c.rotation.y += c.userData.spin.y * velFactor * velSign;
           }
           if (c.userData.basePhase !== undefined) {
-            // Wave rings: pulse speed responds to velocity
             const speed = 2 + vAbs * 0.06;
             const s = 1 + Math.sin(t * speed + c.userData.basePhase) * 0.08;
             c.scale.set(s, s, 1);
@@ -4640,13 +4577,52 @@ if (isPhoneLayout) {
         requestAnimationFrame(animate);
       }
       
-      // Pre-compile shaders to prevent massive framedrops on mobile scroll
       renderer.compile(scene, camera);
       
       registerAnim(cv, animate);
       animObserver.observe(cv);
       animate();
+      
+      // Store disposal function on the card for memory management
+      card._disposeWebGL = function() {
+        try {
+          // Stop animation by marking the registry entry as removed
+          animRegistry.delete(cv);
+          animObserver.unobserve(cv);
+          // Walk scene and dispose all geometries/materials
+          scene.traverse(function(obj) {
+            if (obj.geometry) obj.geometry.dispose();
+            if (obj.material) {
+              if (Array.isArray(obj.material)) {
+                obj.material.forEach(function(m){ m.dispose(); });
+              } else {
+                obj.material.dispose();
+              }
+            }
+          });
+          renderer.dispose();
+          // Lose context explicitly to free GPU memory
+          var gl = renderer.getContext();
+          var loseExt = gl && gl.getExtension('WEBGL_lose_context');
+          if (loseExt) loseExt.loseContext();
+          card._disposeWebGL = null;
+        } catch(e) { console.warn('Arsenal dispose error:', e); }
+      };
     });
+    
+    // Far-observer: dispose cards that are 2+ viewports away (memory saving on Android)
+    // Re-init not needed because we keep the cards close-by allocated.
+    // On Android specifically: dispose aggressively. On iOS: lighter touch.
+    var farMargin = isAndroid ? '200% 0px 200% 0px' : '500% 0px 500% 0px';
+    var farObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(en) {
+        // When card is FAR from viewport (not intersecting with the large margin), dispose
+        if (!en.isIntersecting && en.target._disposeWebGL) {
+          en.target._disposeWebGL();
+        }
+      });
+    }, { rootMargin: farMargin, threshold: 0 });
+    cards.forEach(function(card) { farObserver.observe(card); });
   })();
 } else {
   // === Desktop: Cinematic Accordion + tiny artifact previews + Drawer ===
@@ -4721,7 +4697,7 @@ if (isPhoneLayout) {
           ring.userData.basePhase = i * 0.6;
           group.add(ring);
         }
-            } else if (kind === 'prism') {
+      } else if (kind === 'prism') {
         const g = new THREE.OctahedronGeometry(0.7, 0);
         group.add(new THREE.Mesh(g, new THREE.MeshBasicMaterial({ color: accent, transparent: true, opacity: 0.8, wireframe: true })));
         const innerG = new THREE.OctahedronGeometry(0.35, 0);
@@ -4736,7 +4712,7 @@ if (isPhoneLayout) {
         group.add(l);
         baseSpinY = 0.01;
         baseSpinX = 0.01;
-} else if (kind === 'helix') {
+      } else if (kind === 'helix') {
         const turns = 3, segs = 120, pts1 = [], pts2 = [];
         for (let i = 0; i <= segs; i++) {
           const tt = i / segs, a = tt * Math.PI * 2 * turns, y = (tt - 0.5) * 1.6;
@@ -4789,7 +4765,6 @@ if (isPhoneLayout) {
 (function soundToggle() {
   const btn = document.getElementById('soundToggle');
   if (!btn) return;
-  // Reflect initial muted state (could be persisted in sessionStorage)
   if (SoundManager.isMuted()) btn.classList.add('muted');
   btn.addEventListener('click', () => {
     const next = !SoundManager.isMuted();
@@ -4832,6 +4807,7 @@ window.addEventListener('scroll', () => {
   });
   sideItems.forEach((el, i) => el.classList.toggle('active', i === active));
 });
+
 /* ============== VIDEO MODAL ============== */
 window.addEventListener('DOMContentLoaded', () => {
   const modal = document.getElementById('videoModal');
@@ -4878,7 +4854,6 @@ window.addEventListener('DOMContentLoaded', () => {
   document.body.addEventListener('click', (e) => {
     const card = e.target.closest('.work-card:not(.work-card--soon)');
     if (card) {
-      // Skip cards that link externally (e.g. live sites)
       if (card.getAttribute('target') === '_blank') return;
       e.preventDefault();
       const video = card.querySelector('video source');
@@ -4902,13 +4877,12 @@ window.addEventListener('DOMContentLoaded', () => {
   const particles = [];
   const PARTICLE_COUNT = 50;
 
-  // Frieda palette: soft sage greens, warm terracotta, cream
   const palette = [
-    { r: 134, g: 162, b: 130 }, // sage
-    { r: 180, g: 130, b: 100 }, // terracotta
-    { r: 210, g: 190, b: 160 }, // cream
-    { r: 100, g: 140, b: 120 }, // deep sage
-    { r: 190, g: 150, b: 120 }, // warm sand
+    { r: 134, g: 162, b: 130 },
+    { r: 180, g: 130, b: 100 },
+    { r: 210, g: 190, b: 160 },
+    { r: 100, g: 140, b: 120 },
+    { r: 190, g: 150, b: 120 },
   ];
 
   function resize() {
@@ -4938,7 +4912,6 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   function draw(t) {
-    // Background gradient — dark with subtle warmth
     const grad = ctx.createLinearGradient(0, 0, w * 0.3, h);
     grad.addColorStop(0, '#1a1714');
     grad.addColorStop(0.5, '#1c1917');
@@ -4946,7 +4919,6 @@ window.addEventListener('DOMContentLoaded', () => {
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, w, h);
 
-    // Soft organic blobs
     const time = t * 0.0004;
     for (let i = 0; i < 3; i++) {
       const cx = w * (0.3 + 0.4 * Math.sin(time + i * 2.1));
@@ -4960,7 +4932,6 @@ window.addEventListener('DOMContentLoaded', () => {
       ctx.fillRect(0, 0, w, h);
     }
 
-    // Particles
     for (const p of particles) {
       p.x += p.vx;
       p.y += p.vy;
@@ -4974,7 +4945,6 @@ window.addEventListener('DOMContentLoaded', () => {
       ctx.fill();
     }
 
-    // Connect nearby particles with faint lines
     ctx.lineWidth = 0.5;
     for (let i = 0; i < particles.length; i++) {
       for (let j = i + 1; j < particles.length; j++) {
@@ -4995,7 +4965,6 @@ window.addEventListener('DOMContentLoaded', () => {
     animId = requestAnimationFrame(draw);
   }
 
-  // Visibility observer — pause when off-screen
   const obs = new IntersectionObserver(entries => {
     entries.forEach(en => {
       if (en.isIntersecting) {
@@ -5036,7 +5005,6 @@ document.addEventListener('DOMContentLoaded', function() {
   
   if (!form) return;
 
-  // Chip selection
   chips.forEach(chip => {
     chip.addEventListener('click', () => {
       chips.forEach(c => c.classList.remove('active'));
@@ -5048,7 +5016,6 @@ document.addEventListener('DOMContentLoaded', function() {
   form.addEventListener('submit', function(e) {
     e.preventDefault();
     
-    // Validate
     const name = form.querySelector('input[name="name"]').value.trim();
     const email = form.querySelector('input[name="email"]').value.trim();
     const message = form.querySelector('textarea[name="message"]').value.trim();
@@ -5083,7 +5050,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const signalFooter = document.getElementById('signalFooter');
         if (signalFooter) {
           signalFooter.style.display = 'block';
-          // Scroll into view
           if (typeof lenis !== 'undefined' && lenis) {
             lenis.scrollTo(signalFooter, { offset: -100, duration: 1.5 });
           } else {
@@ -5104,7 +5070,7 @@ document.addEventListener('DOMContentLoaded', function() {
       });
   });
 })();
-});
+}); // end DOMContentLoaded wrapper
 </script>
 
 </body>
